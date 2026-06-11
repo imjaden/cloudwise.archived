@@ -38,7 +38,7 @@
         .hero-text .company { font-size:1rem; color:var(--text-muted); }
         .hero-text .period { font-size:0.9rem; color:var(--text-primary); margin-top:4px; opacity:0.66; }
 
-        .container { max-width:1100px; margin:0 auto; padding:8px 24px 8px; }
+        .container { max-width:1100px; margin:0 auto; padding:48px 24px 64px; }
         .section-title { font-size:1.5rem; font-weight:700; margin-bottom:8px; display:flex; align-items:center; gap:10px; }
         .section-title .icon { font-size:1.3rem; }
         .section-desc { color:var(--text-secondary); font-size:0.95rem; margin-bottom:10px; }
@@ -217,21 +217,21 @@
 <!-- Hero -->
 <header class="hero">
     <div class="hero-layout">
-        <img class="hero-side-img" data-src="images/profile.webp?t=1780910447" alt="Profile" onclick="openLightbox(this)">
+        <img class="hero-side-img" src="images/profile.webp?t=1780910447" fetchpriority="high" alt="Profile" onclick="openLightbox(this)">
         <div class="hero-text">
             <h1>Jaden Li</h1>
             <p class="subtitle">Solution Architect</p>
             <p class="company">Cloudwise (Beijing) Technology Co., Ltd.</p>
-            <p class="period">Jul 2020 — Jun 2026 · 6 Years</p>
+            <p class="period">Jul 2020 - Jun 2026 · 6 Years</p>
         </div>
-        <img class="hero-side-img" data-src="images/portrait.webp?t=1780910447" alt="Portrait" onclick="openLightbox(this)">
+        <img class="hero-side-img" src="images/portrait.webp?t=1780910447" fetchpriority="high" alt="Portrait" onclick="openLightbox(this)">
     </div>
 </header>
 
 <main class="container">
     <section>
         <h2 class="section-title"><span class="icon">🏆</span> Contributions & Awards</h2>
-        <p class="section-desc">Highlights from my time at Cloudwise — team enablement, company awards, and client shoutouts.</p>
+        <p class="section-desc">Highlights from my time at Cloudwise - team enablement, company awards, and client shoutouts.</p>
         <div class="timeline">
 
             <!-- 1. East China Monday Sharing 2023-2026 -->
@@ -241,9 +241,9 @@
                     <div class="card-header">
                         <div class="card-badge badge-sharing">🎤</div>
                         <div class="card-info">
-                            <div class="card-date"><span class="date-icon">🎤</span>2023 — 2026</div>
+                            <div class="card-date"><span class="date-icon">🎤</span>2023 - 2026</div>
                             <div class="card-title">East China "Monday Morning Sharing"<span class="title-badge">13 Sessions</span></div>
-                            <div class="card-desc">Kept the team sharp with regular tech insights and industry know-how — covering everything from LLMs and AIOps to Castrel AI explorations.</div>
+                            <div class="card-desc">Kept the team sharp with regular tech insights and industry know-how - covering everything from LLMs and AIOps to Castrel AI explorations.</div>
                             <span class="card-tag tag-sharing">Team Enablement</span>
 
                             <div class="card-image expanded" style="max-height:none;opacity:1;padding:0px 0px 20px;">
@@ -273,7 +273,7 @@
                         <div class="card-info">
                             <div class="card-date"><span class="date-icon">🌐</span>Sep 2025</div>
                             <div class="card-title">"Smart Wuxi, Connected Globe" Industry Summit</div>
-                            <div class="card-desc">Invited as a keynote speaker at the "Smart Wuxi, Connected Globe" summit — shared hands-on experience and forward-looking insights on AIOps and digital transformation.</div>
+                            <div class="card-desc">Invited as a keynote speaker at the "Smart Wuxi, Connected Globe" summit - shared hands-on experience and forward-looking insights on AIOps and digital transformation.</div>
                             <span class="card-tag tag-event">Industry Summit · Keynote</span>
                             <button class="toggle-img" onclick="toggleImg(this)"><span class="arrow">▶</span> View Photo</button>
                         </div>
@@ -353,7 +353,7 @@
                         <div class="card-info">
                             <div class="card-date"><span class="date-icon">📖</span>Apr 26, 2023</div>
                             <div class="card-title">"Late Night Classroom" Talk</div>
-                            <div class="card-desc">Gave a deep-dive talk on the internal knowledge-sharing platform titled "A Quick Take on Building Digital O&M for Manufacturing" — walked through practical experience and methodology for going digital in factory ops.</div>
+                            <div class="card-desc">Gave a deep-dive talk on the internal knowledge-sharing platform titled "A Quick Take on Building Digital O&M for Manufacturing" - walked through practical experience and methodology for going digital in factory ops.</div>
                             <span class="card-tag tag-sharing">Knowledge Sharing</span>
                             <button class="toggle-img" onclick="toggleImg(this)"><span class="arrow">▶</span> View Photos</button>
                         </div>
@@ -396,7 +396,7 @@
                         <div class="card-info">
                             <div class="card-date"><span class="date-icon">🛡️</span>Q4 2022</div>
                             <div class="card-title">Customer Service Star of the Year</div>
-                            <div class="card-desc">Named both quarterly and annual "Customer Service Star" on the solutions team — recognized for going above and beyond on client satisfaction.</div>
+                            <div class="card-desc">Named both quarterly and annual "Customer Service Star" on the solutions team - recognized for going above and beyond on client satisfaction.</div>
                             <span class="card-tag tag-award">Quarterly & Annual Star</span>
                             <button class="toggle-img" onclick="toggleImg(this)"><span class="arrow">▶</span> View Certificate</button>
                         </div>
@@ -416,7 +416,7 @@
                         <div class="card-info">
                             <div class="card-date"><span class="date-icon">⭐</span>Nov 2022</div>
                             <div class="card-title">"Outstanding Cloudwiser"</div>
-                            <div class="card-desc">Awarded the annual "Outstanding Cloudwiser" title — recognized for excellence in technical expertise, teamwork, and delivering real value to clients.</div>
+                            <div class="card-desc">Awarded the annual "Outstanding Cloudwiser" title - recognized for excellence in technical expertise, teamwork, and delivering real value to clients.</div>
                             <span class="card-tag tag-special">Annual Honor</span>
                             <button class="toggle-img" onclick="toggleImg(this)"><span class="arrow">▶</span> View Certificate</button>
                         </div>
@@ -456,7 +456,7 @@
                         <div class="card-info">
                             <div class="card-date"><span class="date-icon">💌</span>Jun 2022</div>
                             <div class="card-title">Thank-You Letter from Presales Teammate</div>
-                            <div class="card-desc">Received a written thank-you from the field team for outstanding project support. On the Zhuhai HR Bank O&M Monitoring Platform Phase 2 project, delivered detailed responses on log tracing, root cause analysis, and alert noise reduction — earned a formal thank-you from the client.</div>
+                            <div class="card-desc">Received a written thank-you from the field team for outstanding project support. On the Zhuhai HR Bank O&M Monitoring Platform Phase 2 project, delivered detailed responses on log tracing, root cause analysis, and alert noise reduction - earned a formal thank-you from the client.</div>
                             <span class="card-tag tag-letter">Thank-You Letter · Client Recognition</span>
                             <button class="toggle-img" onclick="toggleImg(this)"><span class="arrow">▶</span> View Letter</button>
                         </div>
@@ -476,7 +476,7 @@
                         <div class="card-info">
                             <div class="card-date"><span class="date-icon">🏅</span>2021</div>
                             <div class="card-title">"Courage to Take Ownership" Award</div>
-                            <div class="card-desc">Named on the 2021 Sales & Presales "Courage to Take Ownership" award list — recognized for stepping up, taking on tough challenges, and delivering in presales.</div>
+                            <div class="card-desc">Named on the 2021 Sales & Presales "Courage to Take Ownership" award list - recognized for stepping up, taking on tough challenges, and delivering in presales.</div>
                             <span class="card-tag tag-award">Company Award</span>
                             <button class="toggle-img" onclick="toggleImg(this)"><span class="arrow">▶</span> View Certificate</button>
                         </div>
@@ -495,8 +495,8 @@
                         <div class="card-badge badge-event">🌐</div>
                         <div class="card-info">
                             <div class="card-date"><span class="date-icon">🌐</span>Nov 2021</div>
-                            <div class="card-title">Cloudwise Open Source Day #6 — Live Talk<span class="title-badge">Episode 6</span></div>
-                            <div class="card-desc">Gave a livestream talk as Solution Architect on "Thoughts on Data Architecture Evolution Based on ClickHouse" — covered the big data architecture journey, ClickHouse adoption status, lakehouse architecture thinking, and bringing outside innovation in-house.</div>
+                            <div class="card-title">Cloudwise Open Source Day #6 - Live Talk<span class="title-badge">Episode 6</span></div>
+                            <div class="card-desc">Gave a livestream talk as Solution Architect on "Thoughts on Data Architecture Evolution Based on ClickHouse" - covered the big data architecture journey, ClickHouse adoption status, lakehouse architecture thinking, and bringing outside innovation in-house.</div>
                             <span class="card-tag tag-event">Tech Talk · Livestream</span>
                             <button class="toggle-img" onclick="toggleImg(this)"><span class="arrow">▶</span> View Poster</button>
                         </div>
@@ -515,8 +515,8 @@
                         <div class="card-badge badge-team">👥</div>
                         <div class="card-info">
                             <div class="card-date"><span class="date-icon">👥</span>Dec 2020</div>
-                            <div class="card-title">East China Solutions Team — Founding Member</div>
-                            <div class="card-desc">Joined as an early core member to build out the East China solutions team from scratch — laid the groundwork for the region's business growth.</div>
+                            <div class="card-title">East China Solutions Team - Founding Member</div>
+                            <div class="card-desc">Joined as an early core member to build out the East China solutions team from scratch - laid the groundwork for the region's business growth.</div>
                             <span class="card-tag tag-team">Team Building</span>
                             <button class="toggle-img" onclick="toggleImg(this)"><span class="arrow">▶</span> View Photos</button>
                         </div>
@@ -686,13 +686,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox()});
     items.forEach(i=>io.observe(i));
 })();
 
-/* #6 Hero images: load after page ready */
-window.addEventListener('load',function(){
-    document.querySelectorAll('.hero-side-img[data-src]').forEach(function(img){
-        img.src=img.dataset.src;
-        img.removeAttribute('data-src');
-    });
-});
+
 </script>
 </body>
 </html>

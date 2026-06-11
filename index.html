@@ -38,7 +38,7 @@
         .hero-text .company { font-size:1rem; color:var(--text-muted); }
         .hero-text .period { font-size:0.9rem; color:var(--text-primary); margin-top:4px; opacity:0.66; }
 
-        .container { max-width:1100px; margin:0 auto; padding:8px 24px 8px; }
+        .container { max-width:1100px; margin:0 auto; padding:48px 24px 64px; }
         .section-title { font-size:1.5rem; font-weight:700; margin-bottom:8px; display:flex; align-items:center; gap:10px; }
         .section-title .icon { font-size:1.3rem; }
         .section-desc { color:var(--text-secondary); font-size:0.95rem; margin-bottom:10px; }
@@ -217,14 +217,14 @@
 <!-- Hero -->
 <header class="hero">
     <div class="hero-layout">
-        <img class="hero-side-img" data-src="images/profile.webp?t=1780910447" alt="Profile" onclick="openLightbox(this)">
+        <img class="hero-side-img" src="images/profile.webp?t=1780910447" fetchpriority="high" alt="Profile" onclick="openLightbox(this)">
         <div class="hero-text">
             <h1>李俊杰 Jaden Li</h1>
             <p class="subtitle">解决方案架构师 · Solution Architect</p>
             <p class="company">云智慧（北京）科技有限公司 Cloudwise</p>
-            <p class="period">2020年7月 — 2026年6月 · 6年</p>
+            <p class="period">2020年7月 - 2026年6月 · 6年</p>
         </div>
-        <img class="hero-side-img" data-src="images/portrait.webp?t=1780910447" alt="Portrait" onclick="openLightbox(this)">
+        <img class="hero-side-img" src="images/portrait.webp?t=1780910447" fetchpriority="high" alt="Portrait" onclick="openLightbox(this)">
     </div>
 </header>
 
@@ -241,7 +241,7 @@
                     <div class="card-header">
                         <div class="card-badge badge-sharing">🎤</div>
                         <div class="card-info">
-                            <div class="card-date"><span class="date-icon">🎤</span>2023 — 2026</div>
+                            <div class="card-date"><span class="date-icon">🎤</span>2023 - 2026</div>
                             <div class="card-title">华东区「周一早分享」<span class="title-badge">13 次</span></div>
                             <div class="card-desc">持续为团队输出技术洞察与行业方案经验，覆盖 LLM、AIOps、Castrel AI等前沿领域探索。</div>
                             <span class="card-tag tag-sharing">团队赋能</span>
@@ -687,13 +687,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox()});
     items.forEach(i=>io.observe(i));
 })();
 
-/* #6 Hero images: load after page ready */
-window.addEventListener('load',function(){
-    document.querySelectorAll('.hero-side-img[data-src]').forEach(function(img){
-        img.src=img.dataset.src;
-        img.removeAttribute('data-src');
-    });
-});
+
 </script>
 </body>
 </html>
