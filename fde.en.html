@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FDE Deep Dive · Jaden Li</title>
+    <meta name="description" content="Forward Deployed Engineer (FDE) role research, gap analysis, and career transition planning.">
+    <link rel="icon" href="images/cloudwise-logo-new.ico">
+    <meta name="theme-color" content="#0A0A2A">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        :root {
+            --bg-deep: #0A0A2A; --bg-card: #111138; --bg-tab: #0d0d30;
+            --text-primary: #e8e8f8; --text-secondary: #8888bb; --text-muted: #7777bb;
+            --accent-blue: #4A9EFF; --accent-cyan: #00D4AA; --accent-gold: #FFB400; --accent-red: #FF6B6B;
+            --gradient-accent: linear-gradient(135deg, #4A9EFF, #00D4AA);
+            --border-subtle: rgba(74,158,255,0.12); --border-card: rgba(74,158,255,0.15);
+            --shadow-card: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: var(--bg-deep); color: var(--text-primary); line-height: 1.7; -webkit-font-smoothing: antialiased;
+        }
+
+        /* Tabs */
+        .tabs { display:flex; align-items:center; border-bottom:1px solid var(--border-card); background:var(--bg-tab); position:sticky; top:0; z-index:100; }
+        .tab-btn { padding:14px 28px; font-size:0.88rem; font-weight:600; color:var(--text-muted); background:none; border:none; cursor:pointer; border-bottom:2px solid transparent; transition:all 0.2s; white-space:nowrap; }
+        .tab-btn:hover { color:var(--text-secondary); background:rgba(74,158,255,0.04); }
+        .tab-btn.active { color:var(--accent-cyan); border-bottom-color:var(--accent-cyan); }
+
+        /* Tab content */
+        .tab-panel { display:none; max-width:960px; margin:0 auto; padding:40px 24px 80px; animation:fadeIn 0.3s ease; }
+        .tab-panel.active { display:block; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+        /* Section headings */
+        h2 { font-size:1.4rem; font-weight:700; margin:32px 0 12px; display:flex; align-items:center; gap:10px; }
+        h2:first-child { margin-top:0; }
+        h2 .icon { font-size:1.2rem; }
+        h3 { font-size:1.05rem; font-weight:600; margin:20px 0 8px; color:var(--accent-blue); }
+
+        /* Cards */
+        .card { background:var(--bg-card); border:1px solid var(--border-card); border-radius:12px; padding:20px 24px; margin:16px 0; box-shadow:var(--shadow-card); }
+        .card p, .card li { font-size:0.9rem; color:var(--text-secondary); }
+
+        /* Tables */
+        table { width:100%; border-collapse:collapse; margin:12px 0; font-size:0.85rem; }
+        th { background:rgba(74,158,255,0.08); color:var(--accent-blue); padding:10px 14px; text-align:left; font-weight:600; border-bottom:1px solid var(--border-card); }
+        td { padding:10px 14px; border-bottom:1px solid var(--border-subtle); color:var(--text-secondary); }
+        tr:hover td { background:rgba(74,158,255,0.03); }
+
+        /* Tags */
+        .tag { display:inline-block; font-size:0.72rem; padding:2px 10px; border-radius:20px; font-weight:600; }
+        .tag-high { background:rgba(255,107,107,0.15); color:var(--accent-red); }
+        .tag-mid { background:rgba(255,180,0,0.15); color:var(--accent-gold); }
+        .tag-match { background:rgba(74,158,255,0.12); color:var(--accent-blue); }
+
+        /* Timeline */
+        .timeline { position:relative; padding-left:28px; margin:16px 0; }
+        .timeline::before { content:''; position:absolute; left:6px; top:8px; bottom:8px; width:2px; background:linear-gradient(to bottom, var(--accent-blue), var(--accent-cyan)); border-radius:1px; }
+        .timeline-item { position:relative; margin-bottom:20px; }
+        .timeline-dot { position:absolute; left:-28px; top:6px; width:14px; height:14px; border-radius:50%; background:var(--accent-blue); border:3px solid var(--bg-deep); box-shadow:0 0 0 2px var(--accent-blue); }
+        .timeline-item .year { font-size:0.78rem; color:var(--accent-cyan); font-weight:600; }
+        .timeline-item .desc { font-size:0.88rem; color:var(--text-secondary); }
+
+        /* Checklist */
+        .checklist { list-style:none; padding:0; }
+        .checklist li { font-size:0.88rem; color:var(--text-secondary); padding:6px 0; border-bottom:1px solid var(--border-subtle); display:flex; align-items:baseline; gap:8px; }
+        .checklist li::before { content:'◻'; color:var(--accent-blue); font-weight:bold; flex-shrink:0; }
+        .checklist .week { font-size:0.78rem; color:var(--accent-gold); font-weight:600; white-space:nowrap; flex-shrink:0; min-width:70px; }
+
+        /* Comparison highlight */
+        .vs-row { display:grid; grid-template-columns:1fr 40px 1fr; gap:0; align-items:start; margin:8px 0; }
+        .vs-arrow { display:flex; align-items:center; justify-content:center; color:var(--accent-cyan); font-size:1rem; padding-top:8px; }
+        .vs-label { font-size:0.72rem; color:var(--text-muted); font-weight:600; margin-bottom:4px; }
+
+        /* Blockquote */
+        blockquote { border-left:3px solid var(--accent-cyan); padding:12px 16px; margin:16px 0; background:rgba(0,212,170,0.04); border-radius:0 8px 8px 0; }
+        blockquote p { font-size:0.9rem; color:var(--text-secondary); font-style:italic; }
+
+        /* Resource cards */
+        .resource-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:16px; margin:16px 0; }
+        .resource-card { background:var(--bg-card); border:1px solid var(--border-card); border-radius:12px; padding:16px 20px; transition:border-color 0.2s; }
+        .resource-card:hover { border-color:rgba(74,158,255,0.3); }
+        .resource-card h4 { font-size:0.9rem; font-weight:600; margin-bottom:6px; }
+        .resource-card p { font-size:0.82rem; color:var(--text-muted); }
+
+        /* Footer */
+        .footer { text-align:center; padding:24px; color:var(--text-muted); font-size:0.78rem; border-top:1px solid var(--border-subtle); }
+        .footer a { color:var(--accent-blue); text-decoration:none; }
+
+        /* Stats row */
+        .stats { display:flex; gap:16px; flex-wrap:wrap; margin:16px 0; }
+        .stat { background:var(--bg-card); border:1px solid var(--border-card); border-radius:10px; padding:16px 20px; flex:1; min-width:140px; text-align:center; }
+        .stat .num { font-size:1.6rem; font-weight:700; background:var(--gradient-accent); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .stat .label { font-size:0.75rem; color:var(--text-muted); margin-top:4px; }
+
+        @media (max-width:768px) {
+            .tab-btn { padding:10px 16px; font-size:0.8rem; }
+            .tab-panel { padding:24px 16px 60px; }
+            .vs-row { grid-template-columns:1fr; gap:4px; }
+            .vs-arrow { display:none; }
+            table { font-size:0.78rem; }
+            th, td { padding:8px 10px; }
+            .stats { flex-direction:column; }
+        }
+        /* Language Switch */
+        .lang-toggle { display:flex; border-radius:24px; overflow:hidden; border:1px solid var(--border-card); }
+        .lang-toggle a { display:inline-block; padding:5px 14px; font-size:0.78rem; font-weight:600; text-decoration:none; color:var(--text-secondary); transition:all 0.2s; line-height:1.4; }
+        .lang-toggle a.active { background:var(--gradient-accent); color:#fff; }
+        .lang-toggle a:hover:not(.active) { color:var(--text-primary); background:rgba(74,158,255,0.08); }
+    </style>
+</head>
+<body>
+
+<!-- Tabs -->
+<nav class="tabs" role="tablist">
+    <a href="index.en.html" style="padding:14px 20px;font-size:0.85rem;color:var(--accent-blue);text-decoration:none;white-space:nowrap;">← Back</a>
+    <div style="flex:1;display:flex;justify-content:center;gap:0;">
+        <button class="tab-btn active" id="tab-history-btn" data-tab="history" role="tab" aria-selected="true">📜 History</button>
+        <button class="tab-btn" id="tab-skills-btn" data-tab="skills" role="tab" aria-selected="false">⚔️ Skills Comparison</button>
+        <button class="tab-btn" id="tab-plan-btn" data-tab="plan" role="tab" aria-selected="false">🗺️ Learning Plan</button>
+        <button class="tab-btn" id="tab-resources-btn" data-tab="resources" role="tab" aria-selected="false">📚 Resources</button>
+    </div>
+    <div class="lang-toggle" style="margin:0 16px;">
+        <a href="fde.html" aria-label="中文">🇨🇳</a>
+        <a href="fde.en.html" class="active" aria-label="English">🇺🇸</a>
+    </div>
+</nav>
+
+<main>
+<!-- Tab 1: History -->
+<div class="tab-panel active" id="tab-history" role="tabpanel" aria-labelledby="tab-history-btn">
+    <h2><span class="icon">📜</span> FDE History</h2>
+    <blockquote>
+        <p>Software's value doesn't live in the codebase — it lives in the customer's production environment.</p>
+    </blockquote>
+
+    <h3>Origin: Palantir's "Front-of-House Engineer" Experiment</h3>
+    <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:16px;">
+        FDE was pioneered by Palantir in the 2010s, inspired by high-end French restaurants — where front-of-house staff work closely with the kitchen to make sure every dish lands perfectly. The core insight: the hardest part of enterprise software isn't "building it" — it's "getting people to actually use it."
+    </p>
+
+    <h3>Key Milestones</h3>
+    <div class="timeline">
+        <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div><span class="year">2010-2015</span><br><span class="desc">Palantir noticed customers couldn't use, underused, or outright abandoned software after delivery. They started experimenting with the FDE model.</span></div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div><span class="year">2016</span><br><span class="desc">Palantir's FDE headcount briefly exceeded their core software engineers — proving the model's commercial value.</span></div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div><span class="year">2024 Q4</span><br><span class="desc">OpenAI starts building an FDE team. FDE goes from "Palantir thing" to "industry standard."</span></div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div><span class="year">2025 Q1</span><br><span class="desc">Anthropic forms a $1.5B joint venture, hiring Applied AI Engineers (an FDE variant).</span></div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div><span class="year">2026 Q1</span><br><span class="desc">OpenAI spins up "The Deployment Company" as a standalone entity, raising over $4B at roughly $10B valuation.</span></div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div><span class="year">2026 Q2</span><br><span class="desc">FDE job postings hit 5,330 — an <strong style="color:var(--accent-red)">800%</strong> increase. Deloitte, Alibaba Cloud, Databricks, Scale AI and others all have FDE roles.</span></div>
+        </div>
+    </div>
+
+    <h3>The AI Deployment Gap — What's Driving This</h3>
+    <div class="stats">
+        <div class="stat">
+            <div class="num">95%</div>
+            <div class="label">of enterprise AI pilots produced no measurable business impact</div>
+        </div>
+        <div class="stat">
+            <div class="num">800%</div>
+            <div class="label">FDE job growth (2025→2026)</div>
+        </div>
+        <div class="stat">
+            <div class="num">$100B</div>
+            <div class="label">OpenAI Deployment Co. valuation</div>
+        </div>
+    </div>
+    <blockquote>
+        <p>95% of enterprise AI pilots produced no measurable business impact. The problem isn't the model — it's the deployment.<br>The value chain is shifting right: "building" is nearly free, "defining the right problem" is extremely expensive.</p>
+    </blockquote>
+
+    <h3>FDE Core Workflow</h3>
+    <div class="card" style="padding:24px;">
+        <svg viewBox="0 0 700 150" role="img" aria-label="FDE Core Workflow" style="max-width:660px;width:100%;height:auto;margin:0 auto;display:block;" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <marker id="flow-arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#4A9EFF"/></marker>
+                <marker id="flow-arr-cyan" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#00D4AA"/></marker>
+            </defs>
+
+            <!-- Horizontal flow -->
+            <path d="M115,50 L165,50" stroke="#4A9EFF" stroke-width="1.5" fill="none" marker-end="url(#flow-arr)"/>
+            <path d="M255,50 L305,50" stroke="#4A9EFF" stroke-width="1.5" fill="none" marker-end="url(#flow-arr)"/>
+            <path d="M395,50 L445,50" stroke="#4A9EFF" stroke-width="1.5" fill="none" marker-end="url(#flow-arr)"/>
+            <path d="M535,50 L585,50" stroke="#4A9EFF" stroke-width="1.5" fill="none" marker-end="url(#flow-arr)"/>
+
+            <!-- Return loop -->
+            <path d="M630,62 L630,120 L70,120 L70,62" stroke="#00D4AA" stroke-width="1.5" fill="none" marker-end="url(#flow-arr-cyan)"/>
+
+            <!-- Nodes -->
+            <circle cx="70" cy="50" r="12" fill="#0A0A2A" stroke="#FFB400" stroke-width="2"/>
+            <text x="70" y="54" text-anchor="middle" fill="#FFB400" font-size="8" font-weight="600">01</text>
+            <text x="70" y="80" text-anchor="middle" fill="#FFB400" font-size="10" font-weight="600">Insight</text>
+
+            <circle cx="210" cy="50" r="12" fill="#0A0A2A" stroke="#4A9EFF" stroke-width="2"/>
+            <text x="210" y="54" text-anchor="middle" fill="#4A9EFF" font-size="8" font-weight="600">02</text>
+            <text x="210" y="80" text-anchor="middle" fill="#e8e8f8" font-size="10" font-weight="600">Design</text>
+
+            <circle cx="350" cy="50" r="12" fill="#0A0A2A" stroke="#4A9EFF" stroke-width="2"/>
+            <text x="350" y="54" text-anchor="middle" fill="#4A9EFF" font-size="8" font-weight="600">03</text>
+            <text x="350" y="80" text-anchor="middle" fill="#e8e8f8" font-size="10" font-weight="600">Prototype</text>
+            <text x="350" y="93" text-anchor="middle" fill="#5555aa" font-size="8">PoC</text>
+
+            <circle cx="490" cy="50" r="12" fill="#0A0A2A" stroke="#4A9EFF" stroke-width="2"/>
+            <text x="490" y="54" text-anchor="middle" fill="#4A9EFF" font-size="8" font-weight="600">04</text>
+            <text x="490" y="80" text-anchor="middle" fill="#e8e8f8" font-size="10" font-weight="600">Deploy</text>
+
+            <circle cx="630" cy="50" r="12" fill="#0A0A2A" stroke="#00D4AA" stroke-width="2"/>
+            <text x="630" y="54" text-anchor="middle" fill="#00D4AA" font-size="8" font-weight="600">05</text>
+            <text x="630" y="80" text-anchor="middle" fill="#00D4AA" font-size="10" font-weight="600">Feedback</text>
+        </svg>
+    </div>
+
+    <h3>A Day in the Life</h3>
+    <div class="card">
+        <table>
+            <tr><td style="color:var(--accent-cyan);font-weight:600;width:80px">09:00</td><td>Join the customer's standup (not your own team's)</td></tr>
+            <tr><td style="color:var(--accent-cyan);font-weight:600">10:00</td><td>Code inside the customer's environment — their data, their auth, their deployment constraints</td></tr>
+            <tr><td style="color:var(--accent-cyan);font-weight:600">12:00</td><td>Lunch with the customer's business side, digging for new needs</td></tr>
+            <tr><td style="color:var(--accent-cyan);font-weight:600">14:00</td><td>Ship production code for the day</td></tr>
+            <tr><td style="color:var(--accent-cyan);font-weight:600">16:00</td><td>Feed field insights back to the core product team</td></tr>
+            <tr><td style="color:var(--accent-cyan);font-weight:600">18:00</td><td>Write up docs, prep tomorrow's PoC demo</td></tr>
+        </table>
+    </div>
+
+    <h3>Top Hiring Companies</h3>
+    <table>
+        <thead><tr><th>Company</th><th>Role Title</th><th>What Makes It Unique</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Palantir</strong></td><td>FDSE</td><td>Largest scale, toughest interviews (open-ended case studies)</td></tr>
+            <tr><td><strong>OpenAI</strong></td><td>FDE</td><td>Heavy focus on evals and deep production AI experience</td></tr>
+            <tr><td><strong>Anthropic</strong></td><td>Applied AI Engineer</td><td>Strict mission-alignment screening</td></tr>
+            <tr><td><strong>Databricks</strong></td><td>FDE</td><td>Emphasis on Spark, SQL, and data modeling</td></tr>
+            <tr><td><strong>Alibaba Cloud</strong></td><td>FDE</td><td>Domestic China market, 35-55K × 13 months</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Tab 2: Skills Comparison -->
+<div class="tab-panel" id="tab-skills" role="tabpanel" aria-labelledby="tab-skills-btn">
+    <h2><span class="icon">⚔️</span> Skills & Role Requirements</h2>
+    <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:24px;">
+        The key difference between a Pre-Sales Solution Architect and an FDE: you go from "delivering proposals" to "owning outcomes," and from "powers of persuasion" to "powers of delivery."
+    </p>
+
+    <h3>Side-by-Side: Pre-Sales vs FDE</h3>
+    <table>
+        <thead><tr><th>Dimension</th><th>Pre-Sales Solution Architect</th><th>FDE</th></tr></thead>
+        <tbody>
+            <tr><td><strong>When you engage</strong></td><td>Before the deal closes</td><td style="color:var(--accent-cyan)">After the deal closes</td></tr>
+            <tr><td><strong>Core output</strong></td><td>Proposal decks + demos</td><td style="color:var(--accent-cyan)">Runnable production code</td></tr>
+            <tr><td><strong>Success metric</strong></td><td>Win rate</td><td style="color:var(--accent-cyan)">Production adoption rate</td></tr>
+            <tr><td><strong>Customer relationship</strong></td><td>Sales-driven, technical advisor</td><td style="color:var(--accent-cyan)">Deeply embedded, co-defining the problem</td></tr>
+            <tr><td><strong>Do you write code?</strong></td><td>No / rarely</td><td style="color:var(--accent-cyan)">Yes — it's the core job</td></tr>
+            <tr><td><strong>Travel</strong></td><td>High</td><td style="color:var(--accent-cyan)">50%+</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Mindset Shift</h3>
+    <div class="card">
+        <div class="vs-row">
+            <div><div class="vs-label">Pre-Sales Mindset</div>"I own the proposal; delivery is someone else's problem"</div>
+            <div class="vs-arrow">→</div>
+            <div><div class="vs-label" style="color:var(--accent-cyan)">FDE Mindset</div>"I own it until the business outcome actually changes"</div>
+        </div>
+        <div class="vs-row">
+            <div><div class="vs-label">Pre-Sales Mindset</div>"A great technical pitch wins the deal"</div>
+            <div class="vs-arrow">→</div>
+            <div><div class="vs-label" style="color:var(--accent-cyan)">FDE Mindset</div>"Working code gets the customer using it"</div>
+        </div>
+        <div class="vs-row">
+            <div><div class="vs-label">Pre-Sales Mindset</div>"Customer requirements → product feature mapping"</div>
+            <div class="vs-arrow">→</div>
+            <div><div class="vs-label" style="color:var(--accent-cyan)">FDE Mindset</div>"Customer pain point → rapid prototype → iterate and validate"</div>
+        </div>
+        <div class="vs-row">
+            <div><div class="vs-label">Pre-Sales Mindset</div>"Win rate is the key metric"</div>
+            <div class="vs-arrow">→</div>
+            <div><div class="vs-label" style="color:var(--accent-cyan)">FDE Mindset</div>"Production adoption rate is the key metric"</div>
+        </div>
+        <div class="vs-row">
+            <div><div class="vs-label">Pre-Sales Mindset</div>"I'm the customer's advisor"</div>
+            <div class="vs-arrow">→</div>
+            <div><div class="vs-label" style="color:var(--accent-cyan)">FDE Mindset</div>"I'm part of the customer's team"</div>
+        </div>
+    </div>
+
+    <h3>Hard Skills Required (2026)</h3>
+    <table>
+        <thead><tr><th>Tier</th><th>Tech Area</th><th>Priority</th></tr></thead>
+        <tbody>
+            <tr><td>LLM Fundamentals</td><td>Model internals, tokenization, function calling, prompt architecture</td><td><span class="tag tag-high">⭐⭐⭐</span></td></tr>
+            <tr><td>RAG Systems</td><td>Chunking strategies, vector DBs, embedding models, reranking</td><td><span class="tag tag-high">⭐⭐⭐</span></td></tr>
+            <tr><td>Agent Development</td><td>LangGraph/CrewAI/DSPy, multi-step tool chains, MCP protocol</td><td><span class="tag tag-high">⭐⭐⭐</span></td></tr>
+            <tr><td>Evaluation Frameworks</td><td>Building eval suites to catch hallucinations, regressions, and bias</td><td><span class="tag tag-high">⭐⭐⭐</span></td></tr>
+            <tr><td>Full-Stack Dev</td><td>Python (FastAPI) + TypeScript (React) + backend APIs</td><td><span class="tag tag-mid">⭐⭐</span></td></tr>
+            <tr><td>Deploy & Ops</td><td>Docker/K8s, CI/CD, vLLM/TGI inference serving</td><td><span class="tag tag-mid">⭐⭐</span></td></tr>
+            <tr><td>Security & Compliance</td><td>Private cloud/on-prem deployments (SSO, VPC, SOC2/HIPAA)</td><td><span class="tag tag-mid">⭐⭐</span></td></tr>
+        </tbody>
+    </table>
+
+    <h3>Gap Analysis (Based on My Resume)</h3>
+    <h4 style="color:var(--accent-cyan);margin:16px 0 8px;font-size:0.9rem;">✅ Existing Strengths</h4>
+    <table>
+        <thead><tr><th>Dimension</th><th>What I Bring</th><th>Match</th></tr></thead>
+        <tbody>
+            <tr><td>Client Communication</td><td>6 years in pre-sales, serving telco/UnionPay/Shanghai Airport and other major accounts</td><td><span class="tag tag-match">⭐⭐⭐</span></td></tr>
+            <tr><td>Solution Design</td><td>Built the East China pre-sales org from scratch, standardized solution delivery</td><td><span class="tag tag-match">⭐⭐⭐</span></td></tr>
+            <tr><td>Project Management</td><td>PMP + ACP + ITIL4</td><td><span class="tag tag-match">⭐⭐⭐</span></td></tr>
+            <tr><td>Industry Experience</td><td>Finance / Telecom / Aviation / Retail / Pharma</td><td><span class="tag tag-match">⭐⭐⭐</span></td></tr>
+            <tr><td>AI Practice</td><td>Early adopter of LLMs in ops scenarios, led AI PoC projects</td><td><span class="tag tag-match">⭐⭐</span></td></tr>
+        </tbody>
+    </table>
+
+    <h4 style="color:var(--accent-red);margin:16px 0 8px;font-size:0.9rem;">🔴 Gaps to Close</h4>
+    <table>
+        <thead><tr><th>Dimension</th><th>The Gap</th><th>Priority</th><th>Time Estimate</th></tr></thead>
+        <tbody>
+            <tr><td>Code Delivery</td><td>Pre-sales doesn't code; FDE's core output is runnable code</td><td><span class="tag tag-high">High</span></td><td>3-6 months</td></tr>
+            <tr><td>RAG Systems</td><td>Understand the concepts but lack end-to-end build experience</td><td><span class="tag tag-high">High</span></td><td>1-2 months</td></tr>
+            <tr><td>Agent Development</td><td>Hands-on with LangGraph/CrewAI/MCP is thin</td><td><span class="tag tag-high">High</span></td><td>1-2 months</td></tr>
+            <tr><td>Eval Frameworks</td><td>No experience building eval suites</td><td><span class="tag tag-mid">Medium</span></td><td>2-4 weeks</td></tr>
+            <tr><td>Container Deployment</td><td>K8s/vLLM production deployment experience</td><td><span class="tag tag-mid">Medium</span></td><td>2-4 weeks</td></tr>
+            <tr><td>Python Full-Stack</td><td>Need to go from "scripting level" to "service level"</td><td><span class="tag tag-mid">Medium</span></td><td>1-2 months</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Salary Reference (2026)</h3>
+    <table>
+        <thead><tr><th>Company</th><th>TC Range</th><th>Median</th></tr></thead>
+        <tbody>
+            <tr><td>Palantir FDSE</td><td>$171K – $415K+</td><td>~$215K</td></tr>
+            <tr><td>OpenAI</td><td>$249K – $1.28M</td><td>~$555K</td></tr>
+            <tr><td>Anthropic</td><td>$350K – $550K</td><td>up to $900K+</td></tr>
+            <tr><td>Databricks</td><td>$300K – $500K</td><td>—</td></tr>
+            <tr><td>Industry Average</td><td>$124K – $198K</td><td>$156K</td></tr>
+            <tr><td>Alibaba Cloud (China)</td><td>35-55K × 13 months</td><td>—</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Tab 3: Learning Plan -->
+<div class="tab-panel" id="tab-plan" role="tabpanel" aria-labelledby="tab-plan-btn">
+    <h2><span class="icon">🗺️</span> Learning Plan</h2>
+    <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:24px;">
+        Three-phase path: tech stack gap-fill (months 1-3) → business scenario practice (months 2-3) → interview prep (month 1)
+    </p>
+
+    <h3>Phase 1: Tech Stack Gap-Fill (Months 1-3)</h3>
+    <div class="card">
+        <h4 style="color:var(--accent-gold);margin-bottom:12px;">Week 1-2: Python Full-Stack Level-Up</h4>
+        <ul class="checklist">
+            <li><span class="week">Week 1</span> Build RESTful APIs with FastAPI</li>
+            <li><span class="week">Week 1</span> Data validation with Pydantic</li>
+            <li><span class="week">Week 2</span> Database ops with SQLAlchemy + Alembic</li>
+            <li><span class="week">Week 2</span> Async programming (asyncio)</li>
+        </ul>
+    </div>
+    <div class="card">
+        <h4 style="color:var(--accent-gold);margin-bottom:12px;">Week 3-4: RAG Systems Hands-On</h4>
+        <ul class="checklist">
+            <li><span class="week">Week 3</span> Vector DB selection & deployment (pgvector / ChromaDB)</li>
+            <li><span class="week">Week 3</span> Document chunking strategies (Recursive / Semantic)</li>
+            <li><span class="week">Week 3</span> Embedding model selection (text-embedding-3-small / BGE)</li>
+            <li><span class="week">Week 4</span> End-to-end RAG pipeline build</li>
+            <li><span class="week">Week 4</span> Reranker integration</li>
+        </ul>
+    </div>
+    <div class="card">
+        <h4 style="color:var(--accent-gold);margin-bottom:12px;">Week 5-8: Agent Development</h4>
+        <ul class="checklist">
+            <li><span class="week">Week 5</span> LangGraph basics (State Graph, Tool Node)</li>
+            <li><span class="week">Week 6</span> MCP protocol & server development</li>
+            <li><span class="week">Week 7</span> Multi-agent orchestration (CrewAI / AutoGen)</li>
+            <li><span class="week">Week 8</span> Function Calling & Tool Use best practices</li>
+        </ul>
+    </div>
+    <div class="card">
+        <h4 style="color:var(--accent-gold);margin-bottom:12px;">Week 9-12: Evaluation & Deployment</h4>
+        <ul class="checklist">
+            <li><span class="week">Week 9</span> Eval frameworks (RAGAS / DeepEval / custom)</li>
+            <li><span class="week">Week 10</span> Docker + Docker Compose</li>
+            <li><span class="week">Week 10</span> K8s basics (Deployment, Service, Ingress)</li>
+            <li><span class="week">Week 11</span> vLLM / TGI inference serving</li>
+            <li><span class="week">Week 12</span> Monitoring (Prometheus + Grafana) + Logging (ELK)</li>
+        </ul>
+    </div>
+
+    <h3>Phase 2: Business Scenario Practice (Months 2-3)</h3>
+    <div class="resource-grid">
+        <div class="resource-card">
+            <h4>🏢 Scenario 1: Enterprise Knowledge Base RAG</h4>
+            <p>Customer has PDF/Word docs, build a smart Q&A system.<br><br><strong>Tech:</strong>Doc parsing → chunking → vectorize → retrieve → generate<br><strong>Challenge:</strong>Multi-modal docs, access control, hallucination suppression<br><strong>Deliverable:</strong>Runnable RAG service + evaluation report</p>
+        </div>
+        <div class="resource-card">
+            <h4>💬 Scenario 2: Customer Service Agent</h4>
+            <p>24/7 smart support agent that can look up orders, handle refunds, and answer product questions.<br><br><strong>Tech:</strong>Intent recognition → tool calls → multi-turn dialogue → human fallback<br><strong>Challenge:</strong>Edge cases, safety filtering, user experience<br><strong>Deliverable:</strong>Agent service + admin dashboard</p>
+        </div>
+        <div class="resource-card">
+            <h4>🔍 Scenario 3: Code Review Agent</h4>
+            <p>AI-powered code review integrated into Git workflows.<br><br><strong>Tech:</strong>Git integration → diff analysis → rule matching → comment generation<br><strong>Challenge:</strong>Rule customization, false positive control, team collaboration<br><strong>Deliverable:</strong>GitHub/GitLab bot + review reports</p>
+        </div>
+        <div class="resource-card">
+            <h4>🛠️ Scenario 4: Ops Diagnostics Agent</h4>
+            <p>Draw on AIOps experience to build a fault diagnosis agent.<br><br><strong>Tech:</strong>Log analysis → metric correlation → root cause → fix suggestions<br><strong>Challenge:</strong>Multi-source data fusion, real-time, accuracy<br><strong>Deliverable:</strong>Diagnosis agent + visual dashboard</p>
+        </div>
+    </div>
+
+    <h3>Phase 3: Interview Prep (1 month)</h3>
+    <table>
+        <thead><tr><th>Round</th><th>Content</th><th>Key Prep</th></tr></thead>
+        <tbody>
+            <tr><td>Recruiter Screen</td><td>Motivation, fit</td><td>Have a crisp "Why FDE?" answer ready</td></tr>
+            <tr><td>Hiring Manager</td><td>Deep-dive on past projects</td><td>Use "I" not "we," highlight delivery specifics</td></tr>
+            <tr><td>Coding Round</td><td>Practical coding</td><td>Parse messy CSVs, build a rate limiter, small RAG</td></tr>
+            <tr><td>System Design</td><td>Real deployment scenario</td><td>"Design a HIPAA-compliant RAG system"</td></tr>
+            <tr><td>Case Study</td><td>Ambiguous enterprise problem</td><td><strong>Most critical filter round</strong> — use the 5-step framework</td></tr>
+            <tr><td>Customer Simulation</td><td>Role play</td><td>Present solution to a "customer" using ownership language</td></tr>
+            <tr><td>Behavioral / Values</td><td>STAR method</td><td>6-8 stories, each 60-90 seconds</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Case Study 5-Step Framework</h3>
+    <div class="card" style="counter-reset:step;">
+        <ol style="padding-left:20px;font-size:0.9rem;color:var(--text-secondary);">
+            <li style="margin-bottom:6px;">Clarify the problem and goals</li>
+            <li style="margin-bottom:6px;">Identify stakeholders and success metrics</li>
+            <li style="margin-bottom:6px;">Map out inputs and available data</li>
+            <li style="margin-bottom:6px;">Break into solvable sub-problems, prioritize by risk/value</li>
+            <li>Propose a "walking-skeleton" MVP, then iterate</li>
+        </ol>
+    </div>
+
+    <h3>Differentiation Storylines</h3>
+    <div class="card">
+        <ul style="list-style:none;padding:0;">
+            <li style="font-size:0.88rem;color:var(--text-secondary);padding:8px 0;border-bottom:1px solid var(--border-subtle);">💬 "I have 14 years in tech, 6 as a pre-sales solution architect serving telco/UnionPay/aviation enterprise accounts"</li>
+            <li style="font-size:0.88rem;color:var(--text-secondary);padding:8px 0;border-bottom:1px solid var(--border-subtle);">💬 "I'm transitioning from pre-sales to FDE because I realized the real value isn't in 'getting customers to sign' — it's in 'getting customers to use it'"</li>
+            <li style="font-size:0.88rem;color:var(--text-secondary);padding:8px 0;border-bottom:1px solid var(--border-subtle);">💬 "I've already practiced AI deployment in ops scenarios (change conflict detection, fault diagnosis), and now I want to apply that skill to a broader set of problems"</li>
+            <li style="font-size:0.88rem;color:var(--text-secondary);padding:8px 0;">💬 "My edge: I can both understand the customer's business pain points AND write the code to deliver the solution"</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Tab 4: Resources -->
+<div class="tab-panel" id="tab-resources" role="tabpanel" aria-labelledby="tab-resources-btn">
+    <h2><span class="icon">📚</span> Resources</h2>
+
+    <h3>Do This Week</h3>
+    <div class="card">
+        <ul class="checklist">
+            <li>Sign up for Palantir / OpenAI / Anthropic FDE job alerts to stay current on JDs</li>
+            <li>Set up a personal AI project repo (GitHub) and start documenting your learning journey</li>
+            <li>Build your first RAG demo: LangChain + pgvector document Q&A</li>
+        </ul>
+    </div>
+
+    <h3>Tech Stack Learning Resources</h3>
+    <div class="resource-grid">
+        <div class="resource-card">
+            <h4>🐍 Python Full-Stack</h4>
+            <p>FastAPI official docs, SQLAlchemy tutorials, RealPython async programming guide</p>
+        </div>
+        <div class="resource-card">
+            <h4>🔍 RAG Systems</h4>
+            <p>LangChain RAG tutorial, Pinecone Learning Center, LlamaIndex docs</p>
+        </div>
+        <div class="resource-card">
+            <h4>🤖 Agent Development</h4>
+            <p>LangGraph official docs, CrewAI GitHub, MCP protocol spec, DSPy tutorials</p>
+        </div>
+        <div class="resource-card">
+            <h4>📊 Evaluation Frameworks</h4>
+            <p>RAGAS docs, DeepEval GitHub, OpenAI Eval framework</p>
+        </div>
+        <div class="resource-card">
+            <h4>🐳 Deploy & Ops</h4>
+            <p>Docker official tutorial, K8s official docs, vLLM deployment guide</p>
+        </div>
+        <div class="resource-card">
+            <h4>☁️ Cloud Platforms</h4>
+            <p>AWS / GCP / Azure free tiers, Terraform getting started</p>
+        </div>
+    </div>
+
+    <h3>Interview Prep Resources</h3>
+    <div class="resource-grid">
+        <div class="resource-card">
+            <h4>📝 Palantir FDE Interview Experiences</h4>
+            <p>FDE interview experience threads on Glassdoor, Blind, and other forums</p>
+        </div>
+        <div class="resource-card">
+            <h4>🧩 Case Study Practice</h4>
+            <p>System Design Interview (Alex Xu), enterprise AI deployment case collections</p>
+        </div>
+        <div class="resource-card">
+            <h4>📖 Industry Insights</h4>
+            <p>a16z AI application reports, McKinsey AI deployment research, Sequoia AI 50</p>
+        </div>
+    </div>
+
+    <h3>Career Path</h3>
+    <div class="card" style="padding:24px;">
+        <svg viewBox="0 0 700 200" role="img" aria-label="FDE Career Path" style="max-width:660px;width:100%;height:auto;margin:0 auto;display:block;" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <marker id="career-arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#4A9EFF"/></marker>
+            </defs>
+
+            <!-- Column 1 → 2 → 3: horizontal main path -->
+            <path d="M120,80 L210,80" stroke="#FFB400" stroke-width="1.5" fill="none" marker-end="url(#career-arr)"/>
+            <path d="M280,80 L370,80" stroke="#4A9EFF" stroke-width="1.5" fill="none" marker-end="url(#career-arr)"/>
+            <path d="M440,80 L510,80" stroke="#00D4AA" stroke-width="1.5" fill="none"/>
+
+            <!-- Column 3 → 4: vertical split to 4 branches -->
+            <path d="M510,80 L540,80" stroke="#00D4AA" stroke-width="1.2" fill="none"/>
+            <path d="M540,30 L540,150" stroke="#00D4AA" stroke-width="1.2" fill="none"/>
+            <path d="M540,30 L580,30" stroke="#00D4AA" stroke-width="1.2" fill="none" marker-end="url(#career-arr)"/>
+            <path d="M540,70 L580,70" stroke="#00D4AA" stroke-width="1.2" fill="none" marker-end="url(#career-arr)"/>
+            <path d="M540,110 L580,110" stroke="#00D4AA" stroke-width="1.2" fill="none" marker-end="url(#career-arr)"/>
+            <path d="M540,150 L580,150" stroke="#00D4AA" stroke-width="1.2" fill="none" marker-end="url(#career-arr)"/>
+
+            <!-- Column 1: Junior FDE -->
+            <circle cx="80" cy="80" r="12" fill="#0A0A2A" stroke="#FFB400" stroke-width="2"/>
+            <text x="80" y="84" text-anchor="middle" fill="#FFB400" font-size="9" font-weight="600">Entry</text>
+            <text x="80" y="110" text-anchor="middle" fill="#FFB400" font-size="11" font-weight="600">Junior FDE</text>
+
+            <!-- Column 2: Senior FDE -->
+            <circle cx="245" cy="80" r="12" fill="#0A0A2A" stroke="#4A9EFF" stroke-width="2"/>
+            <text x="245" y="84" text-anchor="middle" fill="#4A9EFF" font-size="9" font-weight="600">Mid</text>
+            <text x="245" y="110" text-anchor="middle" fill="#e8e8f8" font-size="11" font-weight="600">Senior FDE</text>
+
+            <!-- Column 3: Staff FDE -->
+            <circle cx="405" cy="80" r="12" fill="#0A0A2A" stroke="#00D4AA" stroke-width="2"/>
+            <text x="405" y="84" text-anchor="middle" fill="#00D4AA" font-size="9" font-weight="600">Staff</text>
+            <text x="405" y="110" text-anchor="middle" fill="#00D4AA" font-size="11" font-weight="600">Staff FDE</text>
+
+            <!-- Column 4: 4 career branches -->
+            <rect x="585" y="18" rx="6" width="100" height="24" fill="#0A0A2A" stroke="#00D4AA" stroke-width="1.5"/>
+            <text x="635" y="35" text-anchor="middle" fill="#00D4AA" font-size="10" font-weight="600">Product Eng</text>
+
+            <rect x="585" y="58" rx="6" width="100" height="24" fill="#0A0A2A" stroke="#00D4AA" stroke-width="1.5"/>
+            <text x="635" y="75" text-anchor="middle" fill="#00D4AA" font-size="10" font-weight="600">Customer Eng</text>
+
+            <rect x="585" y="98" rx="6" width="100" height="24" fill="#0A0A2A" stroke="#00D4AA" stroke-width="1.5"/>
+            <text x="635" y="115" text-anchor="middle" fill="#00D4AA" font-size="10" font-weight="600">Solutions Arch</text>
+
+            <rect x="585" y="138" rx="6" width="100" height="24" fill="#0A0A2A" stroke="#00D4AA" stroke-width="1.5"/>
+            <text x="635" y="155" text-anchor="middle" fill="#00D4AA" font-size="10" font-weight="600">Startup</text>
+        </svg>
+    </div>
+</div>
+</main>
+
+<footer class="footer">
+    <p>Data sources: Palantir / OpenAI / Anthropic JDs, Glassdoor salary data, interview experience threads</p>
+    <p style="margin-top:4px;">Last updated: 2026-06-11</p>
+</footer>
+
+<script>
+/* Tab switching */
+document.querySelectorAll('.tab-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){
+        document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');b.setAttribute('aria-selected','false')});
+        document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active')});
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected','true');
+        document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+    });
+});
+
+/* URL hash navigation */
+(function(){
+    var hash=window.location.hash.replace('#','');
+    if(hash){
+        var target=document.querySelector('[data-tab="'+hash+'"]');
+        if(target)target.click();
+    }
+})();
+/* Preserve URL params in language switch */
+(function(){
+    var qs=window.location.search;
+    if(!qs)return;
+    document.querySelectorAll('.lang-toggle a').forEach(function(a){
+        var href=a.getAttribute('href');
+        if(href && href.indexOf('#')===-1) a.setAttribute('href',href+qs);
+    });
+})();
+</script>
+</body>
+</html>
