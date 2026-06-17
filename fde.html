@@ -7,6 +7,42 @@
     <meta name="description" content="Forward Deployed Engineer (FDE) 岗位研究、差距分析与转型路径规划。">
     <link rel="icon" href="images/cloudwise-logo-new.ico">
     <meta name="theme-color" content="#0A0A2A">
+    <script>
+    window.Param = {
+      parse: function() {
+        var params = {},
+            search = window.location.search.substring(1),
+            parts = search.split('&'),
+            pairs = [];
+
+        for(var i = 0, len = parts.length; i < len; i++) {
+          pairs = parts[i].split('=');
+          if(pairs[0] === '') continue
+          params[pairs[0]] = (pairs.length > 1 ? pairs[1] : null);
+        }
+
+        return params;
+      },
+      toString: function(paramsHash) {
+        var pairs = [];
+        for(var key in paramsHash) {
+          pairs.push(key + "=" + paramsHash[key]);
+        }
+        
+        return window.location.href.split("?")[0] + "?" + pairs.join("&");
+      },
+      redirectTo: function(paramsHash) {
+        window.location.href = window.Param.toString(paramsHash);
+      }
+    }
+
+    var params = Param.parse()
+    var t = params.t
+    if (typeof(t) === 'undefined' || (Date.now() - t) > 60*60*1000) {
+      params.t = Date.now()
+      Param.redirectTo(params)
+    }
+    </script>
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
@@ -118,10 +154,10 @@
 <nav class="tabs" role="tablist">
     <a href="index.html" style="padding:14px 20px;font-size:0.85rem;color:var(--accent-blue);text-decoration:none;white-space:nowrap;">← 返回</a>
     <div style="flex:1;display:flex;justify-content:center;gap:0;">
-        <button class="tab-btn active" id="tab-history-btn" data-tab="history" role="tab" aria-selected="true">📜 发展史</button>
-        <button class="tab-btn" id="tab-skills-btn" data-tab="skills" role="tab" aria-selected="false">⚔️ 技能对比</button>
-        <button class="tab-btn" id="tab-plan-btn" data-tab="plan" role="tab" aria-selected="false">🗺️ 学习计划</button>
-        <button class="tab-btn" id="tab-resources-btn" data-tab="resources" role="tab" aria-selected="false">📚 学习资源</button>
+        <button class="tab-btn active" id="tab-history-btn" data-tab="history" role="tab" aria-selected="true">🧬 FDE 的本质</button>
+        <button class="tab-btn" id="tab-skills-btn" data-tab="skills" role="tab" aria-selected="false">🌊 时代的浪潮</button>
+        <button class="tab-btn" id="tab-plan-btn" data-tab="plan" role="tab" aria-selected="false">🎯 我的对标</button>
+        <button class="tab-btn" id="tab-resources-btn" data-tab="resources" role="tab" aria-selected="false">🛠️ 转型工程</button>
     </div>
     <div class="lang-toggle" style="margin:0 16px;">
         <a href="fde.html" class="active" aria-label="中文">🇨🇳</a>
@@ -130,17 +166,121 @@
 </nav>
 
 <main>
-<!-- Tab 1: 发展史 -->
 <div class="tab-panel active" id="tab-history" role="tabpanel" aria-labelledby="tab-history-btn">
-    <h2><span class="icon">📜</span> FDE 发展史</h2>
+    <h2><span class="icon">🧬</span> FDE 的本质</h2>
     <blockquote>
         <p>软件的价值不在代码仓库里，在客户的生产环境中。</p>
     </blockquote>
 
-    <h3>起源：Palantir 的"前场工程师"实验</h3>
+    <h3>FDE = 前场工程师</h3>
     <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:16px;">
-        FDE 由 Palantir 在 2010 年代首创，灵感来自法国高端餐厅——前场服务人员与后厨深度整合，确保每道菜完美呈现。核心洞察：企业软件的最大难题不是"写出来"，而是"用起来"。
+        FDE（Forward Deployed Engineer）由 Palantir 在 2010 年代首创。不是客户成功经理，不是实施顾问，不是驻场运维——<strong>他们是 Palantir 最顶尖的工程师，被派驻到客户现场，与客户的业务专家坐在一起工作，时间通常以年计。</strong>
     </p>
+    <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:16px;">
+        核心洞察：企业软件的最大难题不是"写出来"，而是"用起来"。FDE 的价值不在代码本身，在<strong>将代码转化为客户生产环境中的实际价值</strong>。
+    </p>
+
+    <div class="stats">
+        <div class="stat">
+            <div class="num">95%</div>
+            <div class="label">企业 AI 试点未产生可衡量商业影响</div>
+        </div>
+        <div class="stat">
+            <div class="num">800%</div>
+            <div class="label">FDE 岗位增幅（2025→2026）</div>
+        </div>
+        <div class="stat">
+            <div class="num">>$100B</div>
+            <div class="label">OpenAI Deployment Co. 估值</div>
+        </div>
+    </div>
+
+    <h3>FDE 飞轮——核心不可替代性</h3>
+    <div class="card" style="padding:24px;">
+        <svg viewBox="0 0 700 150" role="img" aria-label="FDE 飞轮" style="max-width:660px;width:100%;height:auto;margin:0 auto;display:block;" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <marker id="flow-arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#4A9EFF"/></marker>
+                <marker id="flow-arr-cyan" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#00D4AA"/></marker>
+            </defs>
+            <path d="M115,50 L165,50" stroke="#4A9EFF" stroke-width="1.5" fill="none" marker-end="url(#flow-arr)"/>
+            <path d="M255,50 L305,50" stroke="#4A9EFF" stroke-width="1.5" fill="none" marker-end="url(#flow-arr)"/>
+            <path d="M395,50 L445,50" stroke="#4A9EFF" stroke-width="1.5" fill="none" marker-end="url(#flow-arr)"/>
+            <path d="M535,50 L585,50" stroke="#4A9EFF" stroke-width="1.5" fill="none" marker-end="url(#flow-arr)"/>
+            <path d="M630,62 L630,120 L70,120 L70,62" stroke="#00D4AA" stroke-width="1.5" fill="none" marker-end="url(#flow-arr-cyan)"/>
+            <circle cx="70" cy="50" r="12" fill="#0A0A2A" stroke="#FFB400" stroke-width="2"/>
+            <text x="70" y="54" text-anchor="middle" fill="#FFB400" font-size="8" font-weight="600">01</text>
+            <text x="70" y="80" text-anchor="middle" fill="#FFB400" font-size="10" font-weight="600">一线痛点</text>
+            <circle cx="210" cy="50" r="12" fill="#0A0A2A" stroke="#4A9EFF" stroke-width="2"/>
+            <text x="210" y="54" text-anchor="middle" fill="#4A9EFF" font-size="8" font-weight="600">02</text>
+            <text x="210" y="80" text-anchor="middle" fill="#e8e8f8" font-size="10" font-weight="600">定制方案</text>
+            <circle cx="350" cy="50" r="12" fill="#0A0A2A" stroke="#4A9EFF" stroke-width="2"/>
+            <text x="350" y="54" text-anchor="middle" fill="#4A9EFF" font-size="8" font-weight="600">03</text>
+            <text x="350" y="80" text-anchor="middle" fill="#e8e8f8" font-size="10" font-weight="600">产品化</text>
+            <circle cx="490" cy="50" r="12" fill="#0A0A2A" stroke="#4A9EFF" stroke-width="2"/>
+            <text x="490" y="54" text-anchor="middle" fill="#4A9EFF" font-size="8" font-weight="600">04</text>
+            <text x="490" y="80" text-anchor="middle" fill="#e8e8f8" font-size="10" font-weight="600">服务更多</text>
+            <circle cx="630" cy="50" r="12" fill="#0A0A2A" stroke="#00D4AA" stroke-width="2"/>
+            <text x="630" y="54" text-anchor="middle" fill="#00D4AA" font-size="8" font-weight="600">05</text>
+            <text x="630" y="80" text-anchor="middle" fill="#00D4AA" font-size="10" font-weight="600">更多场景</text>
+        </svg>
+    </div>
+    <p style="font-size:0.88rem;color:var(--text-secondary);margin:12px 0 4px;">
+        Palantir 公开承认<strong>单个部署的利润率可能很难看</strong>，但他们把每次部署当研发投入。今天 Foundry 中的很多功能模块，最早就是一个 FDE 在某客户那里"手搓"出来的。这个飞轮就是 FDE 的不可替代内核——<strong>判断力、信任构建、现实锚定能力</strong>。
+    </p>
+
+    <h3>FDE ≠ 任何传统岗位</h3>
+    <table>
+        <thead><tr><th>对比维度</th><th>售前架构师</th><th>实施工程师</th><th>FDE</th></tr></thead>
+        <tbody>
+            <tr><td><strong>工作阶段</strong></td><td>签约前</td><td>签约后</td><td style="color:var(--accent-cyan)"><strong>全周期</strong></td></tr>
+            <tr><td><strong>核心产出</strong></td><td>方案 PPT</td><td>系统上线</td><td style="color:var(--accent-cyan)"><strong>可运行生产代码</strong></td></tr>
+            <tr><td><strong>考核指标</strong></td><td>赢单率</td><td>项目验收</td><td style="color:var(--accent-cyan)"><strong>生产环境采纳率</strong></td></tr>
+            <tr><td><strong>客户关系</strong></td><td>销售驱动</td><td>按需交付</td><td style="color:var(--accent-cyan)"><strong>深度嵌入、共同定义问题</strong></td></tr>
+            <tr><td><strong>知识回流</strong></td><td>经验留个人</td><td>经验留项目</td><td style="color:var(--accent-cyan)"><strong>经验回流产品</strong></td></tr>
+        </tbody>
+    </table>
+
+    <h3>主要招聘公司</h3>
+    <table>
+        <thead><tr><th>公司</th><th>角色名称</th><th>特点</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Palantir</strong></td><td>FDSE</td><td>规模最大，最难面试（开放性案例分析）</td></tr>
+            <tr><td><strong>OpenAI</strong></td><td>FDE</td><td>强调 eval 和生产 AI 深度</td></tr>
+            <tr><td><strong>Anthropic</strong></td><td>Applied AI Engineer</td><td>使命对齐严格筛选</td></tr>
+            <tr><td><strong>Databricks</strong></td><td>FDE</td><td>重点考察 Spark、SQL、数据建模</td></tr>
+            <tr><td><strong>Scale AI</strong></td><td>FDE</td><td>模型调优</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="tab-panel" id="tab-skills" role="tabpanel" aria-labelledby="tab-skills-btn">
+    <h2><span class="icon">🌊</span> 时代的浪潮</h2>
+    <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:24px;">
+        FDE 不是一个岗位的偶然爆发，而是 AI 部署鸿沟催生的结构性需求。
+    </p>
+
+    <h3>AI 部署鸿沟</h3>
+    <blockquote>
+        <p>95% 的企业 AI 试点没有产生可衡量的商业影响。<br>问题不在模型，在部署。</p>
+    </blockquote>
+    <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:16px;">
+        模型能力已不再是瓶颈（GPT-5、Claude 4 足够强大）。企业落地才是最大挑战——数据治理、安全合规、业务流程改造、组织变革。<strong>价值链右移："构建"近乎免费，"定义正确问题"极其昂贵。</strong>
+    </p>
+
+    <div class="stats">
+        <div class="stat">
+            <div class="num">2010s</div>
+            <div class="label">Palantir 首创 FDE 模式</div>
+        </div>
+        <div class="stat">
+            <div class="num">2024</div>
+            <div class="label">OpenAI/Anthropic 跟进</div>
+        </div>
+        <div class="stat">
+            <div class="num">2026</div>
+            <div class="label">行业标配，岗位增长 800%</div>
+        </div>
+    </div>
 
     <h3>关键里程碑</h3>
     <div class="timeline">
@@ -158,124 +298,67 @@
         </div>
         <div class="timeline-item">
             <div class="timeline-dot"></div>
-            <div><span class="year">2025 Q1</span><br><span class="desc">Anthropic 成立 15 亿美元合资企业，招聘 Applied AI Engineer（FDE 变体）。</span></div>
-        </div>
-        <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div><span class="year">2026 Q1</span><br><span class="desc">OpenAI 成立"The Deployment Company"独立实体，融资超 40 亿美元，估值约 100 亿美元。</span></div>
-        </div>
-        <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div><span class="year">2026 Q2</span><br><span class="desc">FDE 岗位发布量 5,330 个，增幅 <strong style="color:var(--accent-red)">800%</strong>。Deloitte、阿里云、Databricks、Scale AI 等均设置 FDE 岗位。</span></div>
+            <div><span class="year">2026 Q2</span><br><span class="desc">FDE 岗位发布量 5,330 个，增幅 <strong style="color:var(--accent-red)">800%</strong>。Deloitte、阿里云、Databricks、Scale AI 均设置。</span></div>
         </div>
     </div>
 
-    <h3>AI 部署鸿沟——驱动力</h3>
-    <div class="stats">
-        <div class="stat">
-            <div class="num">95%</div>
-            <div class="label">企业 AI 试点未产生可衡量商业影响</div>
-        </div>
-        <div class="stat">
-            <div class="num">800%</div>
-            <div class="label">FDE 岗位增幅（2025→2026）</div>
-        </div>
-        <div class="stat">
-            <div class="num">$100B</div>
-            <div class="label">OpenAI Deployment Co. 估值</div>
-        </div>
-    </div>
-    <blockquote>
-        <p>95% 的企业 AI 试点没有产生可衡量的商业影响。问题不在模型，在部署。<br>价值链右移："构建"近乎免费，"定义正确问题"极其昂贵。</p>
-    </blockquote>
-
-    <h3>FDE 核心职能流程</h3>
-    <div class="card" style="padding:24px;">
-        <svg viewBox="0 0 700 150" role="img" aria-label="FDE 核心职能流程" style="max-width:660px;width:100%;height:auto;margin:0 auto;display:block;" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <marker id="flow-arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#4A9EFF"/></marker>
-                <marker id="flow-arr-cyan" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#00D4AA"/></marker>
-            </defs>
-
-            <!-- Horizontal flow: 需求洞察 → 方案设计 → 原型开发 → 部署交付 → 反馈闭环 -->
-            <path d="M115,50 L165,50" stroke="#4A9EFF" stroke-width="1.5" fill="none" marker-end="url(#flow-arr)"/>
-            <path d="M255,50 L305,50" stroke="#4A9EFF" stroke-width="1.5" fill="none" marker-end="url(#flow-arr)"/>
-            <path d="M395,50 L445,50" stroke="#4A9EFF" stroke-width="1.5" fill="none" marker-end="url(#flow-arr)"/>
-            <path d="M535,50 L585,50" stroke="#4A9EFF" stroke-width="1.5" fill="none" marker-end="url(#flow-arr)"/>
-
-            <!-- Return loop: 反馈闭环 → 需求洞察 (bottom U) -->
-            <path d="M630,62 L630,120 L70,120 L70,62" stroke="#00D4AA" stroke-width="1.5" fill="none" marker-end="url(#flow-arr-cyan)"/>
-
-            <!-- Nodes -->
-            <circle cx="70" cy="50" r="12" fill="#0A0A2A" stroke="#FFB400" stroke-width="2"/>
-            <text x="70" y="54" text-anchor="middle" fill="#FFB400" font-size="8" font-weight="600">01</text>
-            <text x="70" y="80" text-anchor="middle" fill="#FFB400" font-size="10" font-weight="600">需求洞察</text>
-
-            <circle cx="210" cy="50" r="12" fill="#0A0A2A" stroke="#4A9EFF" stroke-width="2"/>
-            <text x="210" y="54" text-anchor="middle" fill="#4A9EFF" font-size="8" font-weight="600">02</text>
-            <text x="210" y="80" text-anchor="middle" fill="#e8e8f8" font-size="10" font-weight="600">方案设计</text>
-
-            <circle cx="350" cy="50" r="12" fill="#0A0A2A" stroke="#4A9EFF" stroke-width="2"/>
-            <text x="350" y="54" text-anchor="middle" fill="#4A9EFF" font-size="8" font-weight="600">03</text>
-            <text x="350" y="80" text-anchor="middle" fill="#e8e8f8" font-size="10" font-weight="600">原型开发</text>
-            <text x="350" y="93" text-anchor="middle" fill="#5555aa" font-size="8">PoC</text>
-
-            <circle cx="490" cy="50" r="12" fill="#0A0A2A" stroke="#4A9EFF" stroke-width="2"/>
-            <text x="490" y="54" text-anchor="middle" fill="#4A9EFF" font-size="8" font-weight="600">04</text>
-            <text x="490" y="80" text-anchor="middle" fill="#e8e8f8" font-size="10" font-weight="600">部署交付</text>
-
-            <circle cx="630" cy="50" r="12" fill="#0A0A2A" stroke="#00D4AA" stroke-width="2"/>
-            <text x="630" y="54" text-anchor="middle" fill="#00D4AA" font-size="8" font-weight="600">05</text>
-            <text x="630" y="80" text-anchor="middle" fill="#00D4AA" font-size="10" font-weight="600">反馈闭环</text>
-        </svg>
-    </div>
-
-    <h3>日常工作节奏</h3>
-    <div class="card">
-        <table>
-            <tr><td style="color:var(--accent-cyan);font-weight:600;width:80px">09:00</td><td>参加客户的站会（不是自己团队的）</td></tr>
-            <tr><td style="color:var(--accent-cyan);font-weight:600">10:00</td><td>在客户环境内编码（他们的数据、认证、部署约束）</td></tr>
-            <tr><td style="color:var(--accent-cyan);font-weight:600">12:00</td><td>与客户业务方午餐，挖掘新需求</td></tr>
-            <tr><td style="color:var(--accent-cyan);font-weight:600">14:00</td><td>交付当天的生产代码</td></tr>
-            <tr><td style="color:var(--accent-cyan);font-weight:600">16:00</td><td>将现场洞察反馈给核心产品团队</td></tr>
-            <tr><td style="color:var(--accent-cyan);font-weight:600">18:00</td><td>整理文档，准备明天的 PoC 演示</td></tr>
-        </table>
-    </div>
-
-    <h3>主要招聘公司</h3>
+    <h3>底层驱动力：Ontology（本体论）</h3>
+    <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:16px;">
+        Palantir 真正的核心资产不是功能，而是贯穿所有产品的<strong>本体论（Ontology）</strong>架构。理解 Ontology，才能理解 FDE 为何在 AI 时代成为关键。
+    </p>
     <table>
-        <thead><tr><th>公司</th><th>角色名称</th><th>特点</th></tr></thead>
+        <thead><tr><th>层级</th><th>角色</th><th>说明</th></tr></thead>
         <tbody>
-            <tr><td><strong>Palantir</strong></td><td>FDSE</td><td>规模最大，最难面试（开放性案例分析）</td></tr>
-            <tr><td><strong>OpenAI</strong></td><td>FDE</td><td>强调 eval 和生产 AI 深度</td></tr>
-            <tr><td><strong>Anthropic</strong></td><td>Applied AI Engineer</td><td>使命对齐严格筛选</td></tr>
-            <tr><td><strong>Databricks</strong></td><td>FDE</td><td>重点考察 Spark、SQL、数据建模</td></tr>
-            <tr><td><strong>阿里云</strong></td><td>FDE</td><td>国内市场，35-55K×13薪</td></tr>
+            <tr><td><strong>语义层</strong></td><td>定义"世界"</td><td>不是存数据，而是存数据的关系和意义。映射到底层各系统的真实数据</td></tr>
+            <tr><td><strong>动力层</strong></td><td>定义"能做什么"</td><td>把业务逻辑编码成可执行操作，条件触发自动驱动业务流程</td></tr>
+            <tr><td><strong>动态层</strong></td><td>实时同步+AI</td><td>数据管道实时同步，AI通过Ontology理解企业，驱动决策而非仅写报告</td></tr>
+        </tbody>
+    </table>
+    <p style="font-size:0.88rem;color:var(--text-secondary);margin:12px 0 4px;">
+        <strong>关键洞察：</strong>LLM 通过 Ontology 理解企业业务世界（对象/关系/操作/约束），而非直接读原始数据库。Ontology = 给 AI 装上"企业级眼镜"。这就是 Palantir 的 AIP 能驱动决策而非仅"写报告"的底层原因。
+    </p>
+    <p style="font-size:0.88rem;color:var(--text-secondary);">
+        Ontology 由 Tom Gruber 于 1993 年提出（"an explicit specification of a conceptualization"），历经 30 年演化。从 Cyc（1984）到 Google Knowledge Graph（2012）再到 Palantir Foundry 的<strong>运营 Ontology</strong>——从只读的知识表示变为可读、可写、可执行的运营系统。
+    </p>
+
+    <h3>商业模式：Land and Expand</h3>
+    <div class="card">
+        <p style="font-size:0.9rem;color:var(--text-secondary);">
+            Palantir 的商业模式以低门槛切入一个场景 → FDE 驻扎现场扩展 → 本体论覆盖越来越多业务对象 → 客户依赖指数级上升。一旦完成本体论构建，后续扩展几乎是纯利润——<strong>Palantir 毛利率长期维持在 80% 以上</strong>。但代价是<strong>亏损近 20 年</strong>才首次全年盈利。
+        </p>
+    </div>
+
+    <h3>薪资参考（2026）</h3>
+    <table>
+        <thead><tr><th>公司</th><th>薪资范围 (TC)</th><th>中位数</th></tr></thead>
+        <tbody>
+            <tr><td>Palantir FDSE</td><td>$171K – $415K+</td><td>~$215K</td></tr>
+            <tr><td>OpenAI</td><td>$249K – $1.28M</td><td>~$555K</td></tr>
+            <tr><td>Anthropic</td><td>$350K – $550K</td><td>可达 $900K+</td></tr>
+            <tr><td>行业平均</td><td>$124K – $198K</td><td>$156K</td></tr>
         </tbody>
     </table>
 </div>
 
-<!-- Tab 2: 技能对比 -->
-<div class="tab-panel" id="tab-skills" role="tabpanel" aria-labelledby="tab-skills-btn">
-    <h2><span class="icon">⚔️</span> 技能与场景要求</h2>
+<div class="tab-panel" id="tab-plan" role="tabpanel" aria-labelledby="tab-plan-btn">
+    <h2><span class="icon">🎯</span> 我的对标</h2>
     <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:24px;">
-        FDE 与售前解决方案架构师的核心区别：从"方案交付者"变为"结果负责人"，从"说服力"变为"交付力"。
+        6 年售前架构师 → FDE。核心切换：从"方案交付者"变为"结果负责人"，从"说服力"变为"交付力"。
     </p>
 
-    <h3>岗位对比：售前 vs FDE</h3>
+    <h3>岗位对比：售前架构师 vs FDE</h3>
     <table>
-        <thead><tr><th>维度</th><th>售前解决方案架构师</th><th>FDE</th></tr></thead>
+        <thead><tr><th>维度</th><th>售前架构师</th><th>FDE</th></tr></thead>
         <tbody>
             <tr><td><strong>工作阶段</strong></td><td>签约前</td><td style="color:var(--accent-cyan)">签约后</td></tr>
             <tr><td><strong>核心产出</strong></td><td>方案 PPT + 演示</td><td style="color:var(--accent-cyan)">可运行的生产代码</td></tr>
             <tr><td><strong>考核指标</strong></td><td>赢单率</td><td style="color:var(--accent-cyan)">生产环境采纳率</td></tr>
             <tr><td><strong>客户关系</strong></td><td>销售驱动、技术顾问</td><td style="color:var(--accent-cyan)">深度嵌入、共同定义问题</td></tr>
             <tr><td><strong>是否写代码</strong></td><td>否 / 极少</td><td style="color:var(--accent-cyan)">是，核心工作</td></tr>
-            <tr><td><strong>出差比例</strong></td><td>高</td><td style="color:var(--accent-cyan)">50%+</td></tr>
         </tbody>
     </table>
 
-    <h3>认知维度切换</h3>
+    <h3>认知切换</h3>
     <div class="card">
         <div class="vs-row">
             <div><div class="vs-label">售前思维</div>"我负责方案，交付是别人的事"</div>
@@ -304,34 +387,19 @@
         </div>
     </div>
 
-    <h3>硬技能要求（2026）</h3>
-    <table>
-        <thead><tr><th>层级</th><th>技术点</th><th>优先级</th></tr></thead>
-        <tbody>
-            <tr><td>LLM 基础</td><td>大模型原理、tokenization、function calling、Prompt 架构</td><td><span class="tag tag-high">⭐⭐⭐</span></td></tr>
-            <tr><td>RAG 系统</td><td>分块策略、向量数据库、嵌入模型、重排序</td><td><span class="tag tag-high">⭐⭐⭐</span></td></tr>
-            <tr><td>Agent 开发</td><td>LangGraph/CrewAI/DSPy、多步工具链、MCP 协议</td><td><span class="tag tag-high">⭐⭐⭐</span></td></tr>
-            <tr><td>评估框架</td><td>构建检测幻觉、回归、偏差的 eval suite</td><td><span class="tag tag-high">⭐⭐⭐</span></td></tr>
-            <tr><td>全栈开发</td><td>Python(FastAPI) + TypeScript(React) + 后端 API</td><td><span class="tag tag-mid">⭐⭐</span></td></tr>
-            <tr><td>部署运维</td><td>Docker/K8s、CI/CD、vLLM/TGI 推理服务</td><td><span class="tag tag-mid">⭐⭐</span></td></tr>
-            <tr><td>安全合规</td><td>私有云/本地环境部署（SSO、VPC、SOC2/HIPAA）</td><td><span class="tag tag-mid">⭐⭐</span></td></tr>
-        </tbody>
-    </table>
-
-    <h3>差距分析（基于个人简历）</h3>
-    <h4 style="color:var(--accent-cyan);margin:16px 0 8px;font-size:0.9rem;">✅ 已有优势</h4>
+    <h3>✅ 已有优势</h3>
     <table>
         <thead><tr><th>维度</th><th>积累</th><th>匹配度</th></tr></thead>
         <tbody>
-            <tr><td>客户沟通</td><td>6年售前，服务电信/银联/虹桥机场等大客户</td><td><span class="tag tag-match">⭐⭐⭐</span></td></tr>
-            <tr><td>方案设计</td><td>从零搭建华东售前体系，标准化方案交付</td><td><span class="tag tag-match">⭐⭐⭐</span></td></tr>
-            <tr><td>项目管理</td><td>PMP + ACP + ITIL4</td><td><span class="tag tag-match">⭐⭐⭐</span></td></tr>
-            <tr><td>行业经验</td><td>金融/电信/航空/零售/医药</td><td><span class="tag tag-match">⭐⭐⭐</span></td></tr>
-            <tr><td>AI 实践</td><td>率先将 LLM 引入运维场景，主导 AI PoC</td><td><span class="tag tag-match">⭐⭐</span></td></tr>
+            <tr><td>客户沟通</td><td>6年售前，服务电信/银联/虹桥机场等大客户</td><td><span class="tag tag-match">高</span></td></tr>
+            <tr><td>行业理解</td><td>金融/电信/航空/零售/医药，多行业业务语义积累</td><td><span class="tag tag-match">高</span></td></tr>
+            <tr><td>方案设计</td><td>从零搭建华东售前体系，标准化方案交付</td><td><span class="tag tag-match">高</span></td></tr>
+            <tr><td>项目管理</td><td>PMP + ACP + ITIL4</td><td><span class="tag tag-match">高</span></td></tr>
+            <tr><td>Ontology 思维</td><td>6年一直在做但没命名的"Ontology"——理解客户业务世界，映射到技术方案，驱动决策</td><td><span class="tag tag-match">高</span></td></tr>
         </tbody>
     </table>
 
-    <h4 style="color:var(--accent-red);margin:16px 0 8px;font-size:0.9rem;">🔴 需要补齐</h4>
+    <h3>🔴 正在补齐</h3>
     <table>
         <thead><tr><th>维度</th><th>差距</th><th>优先级</th><th>预计投入</th></tr></thead>
         <tbody>
@@ -340,106 +408,20 @@
             <tr><td>Agent 开发</td><td>LangGraph/CrewAI/MCP 实操经验不足</td><td><span class="tag tag-high">高</span></td><td>1-2个月</td></tr>
             <tr><td>评估框架</td><td>缺乏 eval suite 构建经验</td><td><span class="tag tag-mid">中</span></td><td>2-4周</td></tr>
             <tr><td>容器化部署</td><td>K8s/vLLM 生产部署经验</td><td><span class="tag tag-mid">中</span></td><td>2-4周</td></tr>
-            <tr><td>Python 全栈</td><td>需从"脚本级"提升到"服务级"</td><td><span class="tag tag-mid">中</span></td><td>1-2个月</td></tr>
         </tbody>
     </table>
 
-    <h3>薪资参考（2026）</h3>
-    <table>
-        <thead><tr><th>公司</th><th>薪资范围 (TC)</th><th>中位数</th></tr></thead>
-        <tbody>
-            <tr><td>Palantir FDSE</td><td>$171K – $415K+</td><td>~$215K</td></tr>
-            <tr><td>OpenAI</td><td>$249K – $1.28M</td><td>~$555K</td></tr>
-            <tr><td>Anthropic</td><td>$350K – $550K</td><td>可达 $900K+</td></tr>
-            <tr><td>Databricks</td><td>$300K – $500K</td><td>—</td></tr>
-            <tr><td>行业平均</td><td>$124K – $198K</td><td>$156K</td></tr>
-            <tr><td>阿里云（国内）</td><td>35-55K×13薪</td><td>—</td></tr>
-        </tbody>
-    </table>
-</div>
-
-<!-- Tab 3: 学习计划 -->
-<div class="tab-panel" id="tab-plan" role="tabpanel" aria-labelledby="tab-plan-btn">
-    <h2><span class="icon">🗺️</span> 学习计划</h2>
-    <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:24px;">
-        三阶段路径：技术栈补齐（1-3月）→ 业务场景练习（2-3月）→ 面试准备（1月）
-    </p>
-
-    <h3>第一阶段：技术栈补齐（1-3个月）</h3>
+    <h3>差异化故事线</h3>
     <div class="card">
-        <h4 style="color:var(--accent-gold);margin-bottom:12px;">Week 1-2：Python 全栈升级</h4>
-        <ul class="checklist">
-            <li><span class="week">Week 1</span> FastAPI 构建 RESTful API 服务</li>
-            <li><span class="week">Week 1</span> Pydantic 数据验证</li>
-            <li><span class="week">Week 2</span> SQLAlchemy + Alembic 数据库操作</li>
-            <li><span class="week">Week 2</span> 异步编程（asyncio）</li>
-        </ul>
-    </div>
-    <div class="card">
-        <h4 style="color:var(--accent-gold);margin-bottom:12px;">Week 3-4：RAG 系统实战</h4>
-        <ul class="checklist">
-            <li><span class="week">Week 3</span> 向量数据库选型与部署（pgvector / ChromaDB）</li>
-            <li><span class="week">Week 3</span> 文档分块策略（Recursive / Semantic）</li>
-            <li><span class="week">Week 3</span> Embedding 模型选型（text-embedding-3-small / BGE）</li>
-            <li><span class="week">Week 4</span> RAG Pipeline 端到端构建</li>
-            <li><span class="week">Week 4</span> 重排序（Reranker）集成</li>
-        </ul>
-    </div>
-    <div class="card">
-        <h4 style="color:var(--accent-gold);margin-bottom:12px;">Week 5-8：Agent 开发</h4>
-        <ul class="checklist">
-            <li><span class="week">Week 5</span> LangGraph 基础（State Graph、Tool Node）</li>
-            <li><span class="week">Week 6</span> MCP 协议理解与 Server 开发</li>
-            <li><span class="week">Week 7</span> Multi-Agent 编排（CrewAI / AutoGen）</li>
-            <li><span class="week">Week 8</span> Function Calling 与 Tool Use 最佳实践</li>
-        </ul>
-    </div>
-    <div class="card">
-        <h4 style="color:var(--accent-gold);margin-bottom:12px;">Week 9-12：评估与部署</h4>
-        <ul class="checklist">
-            <li><span class="week">Week 9</span> Eval 框架（RAGAS / DeepEval / 自建）</li>
-            <li><span class="week">Week 10</span> Docker + Docker Compose</li>
-            <li><span class="week">Week 10</span> K8s 基础（Deployment、Service、Ingress）</li>
-            <li><span class="week">Week 11</span> vLLM / TGI 推理服务部署</li>
-            <li><span class="week">Week 12</span> 监控（Prometheus + Grafana）+ 日志（ELK）</li>
+        <ul style="list-style:none;padding:0;">
+            <li style="font-size:0.88rem;color:var(--text-secondary);padding:8px 0;border-bottom:1px solid var(--border-subtle);">💬 "我有 14 年技术经验，6 年售前架构师，核心能力不是写代码——<strong>是理解业务世界</strong>（Ontology 思维半生不熟做了 6 年）"</li>
+            <li style="font-size:0.88rem;color:var(--text-secondary);padding:8px 0;border-bottom:1px solid var(--border-subtle);">💬 "转型 FDE 不是因为售前不好做，而是我发现<strong>最大的价值不在说服客户签约，在让客户用起来</strong>"</li>
+            <li style="font-size:0.88rem;color:var(--text-secondary);padding:8px 0;border-bottom:1px solid var(--border-subtle);">💬 "已经在运维场景实践了 AI 落地，现在想把这个能力<strong>从 AIOps 扩展到更广泛的行业场景</strong>"</li>
+            <li style="font-size:0.88rem;color:var(--text-secondary);padding:8px 0;">💬 "我的优势：<strong>既懂业务语义（Ontology），又能写代码交付</strong>——这是纯研发背景的人难以替代的"</li>
         </ul>
     </div>
 
-    <h3>第二阶段：业务场景练习（2-3个月）</h3>
-    <div class="resource-grid">
-        <div class="resource-card">
-            <h4>🏢 场景1：企业知识库 RAG</h4>
-            <p>客户有 PDF/Word 文档，构建智能问答系统。<br><br><strong>技术点：</strong>文档解析 → 分块 → 向量化 → 检索 → 生成<br><strong>挑战：</strong>多模态文档、权限控制、幻觉抑制<br><strong>交付物：</strong>可运行的 RAG 服务 + 评估报告</p>
-        </div>
-        <div class="resource-card">
-            <h4>💬 场景2：客服 Agent</h4>
-            <p>7×24 智能客服，能查订单、退款、回答产品问题。<br><br><strong>技术点：</strong>意图识别 → 工具调用 → 多轮对话 → 人工兜底<br><strong>挑战：</strong>边界处理、安全过滤、用户体验<br><strong>交付物：</strong>Agent 服务 + 管理后台</p>
-        </div>
-        <div class="resource-card">
-            <h4>🔍 场景3：代码审查 Agent</h4>
-            <p>AI 辅助代码审查，集成 Git 工作流。<br><br><strong>技术点：</strong>Git 集成 → Diff 分析 → 规则匹配 → 评论生成<br><strong>挑战：</strong>规则定制、误报控制、团队协作<br><strong>交付物：</strong>GitHub/GitLab Bot + 审查报告</p>
-        </div>
-        <div class="resource-card">
-            <h4>🛠️ 场景4：运维智能诊断</h4>
-            <p>结合 AIOps 经验，构建故障诊断 Agent。<br><br><strong>技术点：</strong>日志分析 → 指标关联 → 根因定位 → 修复建议<br><strong>挑战：</strong>多源数据融合、实时性、准确性<br><strong>交付物：</strong>诊断 Agent + 可视化 Dashboard</p>
-        </div>
-    </div>
-
-    <h3>第三阶段：面试准备（1个月）</h3>
-    <table>
-        <thead><tr><th>轮次</th><th>内容</th><th>准备要点</th></tr></thead>
-        <tbody>
-            <tr><td>Recruiter Screen</td><td>动机、匹配度</td><td>"Why FDE?" 准备清晰回答</td></tr>
-            <tr><td>Hiring Manager</td><td>深挖过去项目</td><td>用"我"而非"我们"，突出交付细节</td></tr>
-            <tr><td>编程轮</td><td>实用型编程</td><td>解析脏 CSV、构建限流器、小型 RAG</td></tr>
-            <tr><td>系统设计</td><td>真实部署场景</td><td>"设计一个 HIPAA 合规的 RAG 系统"</td></tr>
-            <tr><td>案例分析</td><td>模糊企业问题</td><td><strong>最关键筛选轮</strong>，5步框架拆解</td></tr>
-            <tr><td>客户模拟</td><td>角色扮演</td><td>向"客户"展示方案，使用所有权语言</td></tr>
-            <tr><td>行为/价值观</td><td>STAR 方法</td><td>6-8 个 60-90 秒的故事</td></tr>
-        </tbody>
-    </table>
-
-    <h3>案例分析 5 步框架</h3>
+    <h3>面试准备：5 步框架</h3>
     <div class="card" style="counter-reset:step;">
         <ol style="padding-left:20px;font-size:0.9rem;color:var(--text-secondary);">
             <li style="margin-bottom:6px;">澄清问题和目标</li>
@@ -449,74 +431,78 @@
             <li>提出"walking-skeleton" MVP，然后迭代</li>
         </ol>
     </div>
-
-    <h3>差异化故事线</h3>
-    <div class="card">
-        <ul style="list-style:none;padding:0;">
-            <li style="font-size:0.88rem;color:var(--text-secondary);padding:8px 0;border-bottom:1px solid var(--border-subtle);">💬 "我有 14 年技术经验，6 年售前解决方案架构师，服务过电信/银联/航空等标杆客户"</li>
-            <li style="font-size:0.88rem;color:var(--text-secondary);padding:8px 0;border-bottom:1px solid var(--border-subtle);">💬 "我从售前转型 FDE，因为我发现最大的价值不在'说服客户签约'，而在'让客户用起来'"</li>
-            <li style="font-size:0.88rem;color:var(--text-secondary);padding:8px 0;border-bottom:1px solid var(--border-subtle);">💬 "我已经在运维场景中实践了 AI 落地（变更冲突检测、故障诊断），现在想把这个能力应用到更广泛的领域"</li>
-            <li style="font-size:0.88rem;color:var(--text-secondary);padding:8px 0;">💬 "我的优势是：既能理解客户业务痛点，又能亲手写代码交付解决方案"</li>
-        </ul>
-    </div>
 </div>
 
-<!-- Tab 4: 学习资源 -->
 <div class="tab-panel" id="tab-resources" role="tabpanel" aria-labelledby="tab-resources-btn">
-    <h2><span class="icon">📚</span> 学习资源</h2>
+    <h2><span class="icon">🛠️</span> 转型工程</h2>
+    <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:24px;">
+        三阶段转型路径：基础能力 → 场景实战 → 面试准备。
+    </p>
 
-    <h3>立即行动（本周）</h3>
+    <h3>第一阶段：基础能力（Phase 1-4）</h3>
     <div class="card">
+        <h4 style="color:var(--accent-gold);margin-bottom:12px;">Phase 1：Python 全栈升级</h4>
         <ul class="checklist">
-            <li>注册 Palantir / OpenAI / Anthropic 的 FDE 岗位页面，了解最新 JD</li>
-            <li>搭建个人 AI 项目仓库（GitHub），开始记录学习过程</li>
-            <li>完成第一个 RAG Demo：LangChain + pgvector 构建文档问答</li>
+            <li><span class="week">P1</span> FastAPI 构建 RESTful API 服务</li>
+            <li><span class="week">P1</span> Pydantic + SQLAlchemy + Alembic</li>
+            <li><span class="week">P1</span> 异步编程（asyncio）</li>
+        </ul>
+    </div>
+    <div class="card">
+        <h4 style="color:var(--accent-gold);margin-bottom:12px;">Phase 2：RAG 系统实战</h4>
+        <ul class="checklist">
+            <li><span class="week">P2</span> 向量数据库（pgvector / ChromaDB）+ 分块策略</li>
+            <li><span class="week">P2</span> RAG Pipeline 端到端 + 重排序 + 评估</li>
+        </ul>
+    </div>
+    <div class="card">
+        <h4 style="color:var(--accent-gold);margin-bottom:12px;">Phase 3：Agent 开发</h4>
+        <ul class="checklist">
+            <li><span class="week">P3</span> LangGraph 基础 + MCP Server 开发</li>
+            <li><span class="week">P3</span> Multi-Agent 编排（CrewAI）+ Function Calling</li>
+        </ul>
+    </div>
+    <div class="card">
+        <h4 style="color:var(--accent-gold);margin-bottom:12px;">Phase 4：评估与部署</h4>
+        <ul class="checklist">
+            <li><span class="week">P4</span> Eval 框架（RAGAS / DeepEval）</li>
+            <li><span class="week">P4</span> Docker + K8s 基础</li>
+            <li><span class="week">P4</span> vLLM 推理部署 + 监控（Prometheus + Grafana）</li>
         </ul>
     </div>
 
-    <h3>技术栈学习资源</h3>
+    <h3>第二阶段：场景实战</h3>
     <div class="resource-grid">
         <div class="resource-card">
-            <h4>🐍 Python 全栈</h4>
-            <p>FastAPI 官方文档、SQLAlchemy 教程、RealPython 异步编程指南</p>
+            <h4>🏢 场景1：企业知识库 RAG</h4>
+            <p>客户有 PDF/Word 文档，构建智能问答系统。<br><strong>技术点：</strong>文档解析 → 分块 → 向量化 → 检索 → 生成<br><strong>交付：</strong>RAG 服务 + 评估报告</p>
         </div>
         <div class="resource-card">
-            <h4>🔍 RAG 系统</h4>
-            <p>LangChain RAG 教程、Pinecone 学习中心、LlamaIndex 文档</p>
+            <h4>💬 场景2：客服 Agent</h4>
+            <p>7×24 智能客服，能查订单、退款、回答产品问题。<br><strong>技术点：</strong>意图识别 → 工具调用 → 多轮对话 → 人工兜底<br><strong>交付：</strong>Agent 服务 + 管理后台</p>
         </div>
         <div class="resource-card">
-            <h4>🤖 Agent 开发</h4>
-            <p>LangGraph 官方文档、CrewAI GitHub、MCP 协议规范、DSPy 教程</p>
+            <h4>🔍 场景3：代码审查 Agent</h4>
+            <p>AI 辅助代码审查，集成 Git 工作流。<br><strong>技术点：</strong>Git 集成 → Diff 分析 → 规则匹配 → 评论生成<br><strong>交付：</strong>GitHub Bot</p>
         </div>
         <div class="resource-card">
-            <h4>📊 评估框架</h4>
-            <p>RAGAS 文档、DeepEval GitHub、OpenAI Eval 框架</p>
-        </div>
-        <div class="resource-card">
-            <h4>🐳 部署运维</h4>
-            <p>Docker 官方教程、K8s 官方文档、vLLM 部署指南</p>
-        </div>
-        <div class="resource-card">
-            <h4>☁️ 云平台</h4>
-            <p>AWS / GCP / Azure 免费套餐、Terraform 入门</p>
+            <h4>🛠️ 场景4：运维诊断 Agent</h4>
+            <p>结合 AIOps 经验，构建故障诊断 Agent。<br><strong>技术点：</strong>日志分析 → 指标关联 → 根因定位 → 修复建议<br><strong>交付：</strong>诊断 Agent + Dashboard</p>
         </div>
     </div>
 
-    <h3>面试准备资源</h3>
-    <div class="resource-grid">
-        <div class="resource-card">
-            <h4>📝 Palantir FDE 面经</h4>
-            <p>Glassdoor、Blind、一亩三分地上的 FDE 面试经验分享</p>
-        </div>
-        <div class="resource-card">
-            <h4>🧩 案例分析练习</h4>
-            <p>系统设计面试（Alex Xu）、企业 AI 落地案例集</p>
-        </div>
-        <div class="resource-card">
-            <h4>📖 行业洞察</h4>
-            <p>a16z AI 应用报告、McKinsey AI 部署研究、Sequoia AI 50</p>
-        </div>
-    </div>
+    <h3>第三阶段：面试准备</h3>
+    <table>
+        <thead><tr><th>轮次</th><th>内容</th><th>准备要点</th></tr></thead>
+        <tbody>
+            <tr><td>Recruiter Screen</td><td>动机、匹配度</td><td>"Why FDE?" 准备清晰回答</td></tr>
+            <tr><td>Hiring Manager</td><td>深挖过去项目</td><td>用"我"而非"我们"，突出交付细节</td></tr>
+            <tr><td>编程轮</td><td>实用型编程</td><td>解析脏 CSV、构建限流器、小型 RAG</td></tr>
+            <tr><td>系统设计</td><td>真实部署场景</td><td>"设计 HIPAA 合规的 RAG 系统"</td></tr>
+            <tr><td>案例分析</td><td>模糊企业问题</td><td><strong>最关键轮</strong>，5步框架拆解</td></tr>
+            <tr><td>客户模拟</td><td>角色扮演</td><td>向"客户"展示方案，使用所有权语言</td></tr>
+        </tbody>
+    </table>
 
     <h3>职业发展路径</h3>
     <div class="card" style="padding:24px;">
@@ -524,45 +510,30 @@
             <defs>
                 <marker id="career-arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#4A9EFF"/></marker>
             </defs>
-
-            <!-- Column 1 → 2 → 3: horizontal main path -->
             <path d="M120,80 L210,80" stroke="#FFB400" stroke-width="1.5" fill="none" marker-end="url(#career-arr)"/>
             <path d="M280,80 L370,80" stroke="#4A9EFF" stroke-width="1.5" fill="none" marker-end="url(#career-arr)"/>
             <path d="M440,80 L510,80" stroke="#00D4AA" stroke-width="1.5" fill="none"/>
-
-            <!-- Column 3 → 4: vertical split to 4 branches -->
             <path d="M510,80 L540,80" stroke="#00D4AA" stroke-width="1.2" fill="none"/>
-            <path d="M540,30 L540,150" stroke="#00D4AA" stroke-width="1.2" fill="none"/>
+            <path d="M540,30 L540,170" stroke="#00D4AA" stroke-width="1.2" fill="none"/>
             <path d="M540,30 L580,30" stroke="#00D4AA" stroke-width="1.2" fill="none" marker-end="url(#career-arr)"/>
             <path d="M540,70 L580,70" stroke="#00D4AA" stroke-width="1.2" fill="none" marker-end="url(#career-arr)"/>
             <path d="M540,110 L580,110" stroke="#00D4AA" stroke-width="1.2" fill="none" marker-end="url(#career-arr)"/>
             <path d="M540,150 L580,150" stroke="#00D4AA" stroke-width="1.2" fill="none" marker-end="url(#career-arr)"/>
-
-            <!-- Column 1: 初级 FDE -->
             <circle cx="80" cy="80" r="12" fill="#0A0A2A" stroke="#FFB400" stroke-width="2"/>
             <text x="80" y="84" text-anchor="middle" fill="#FFB400" font-size="9" font-weight="600">初级</text>
             <text x="80" y="110" text-anchor="middle" fill="#FFB400" font-size="11" font-weight="600">Junior FDE</text>
-
-            <!-- Column 2: 高级 FDE -->
             <circle cx="245" cy="80" r="12" fill="#0A0A2A" stroke="#4A9EFF" stroke-width="2"/>
             <text x="245" y="84" text-anchor="middle" fill="#4A9EFF" font-size="9" font-weight="600">高级</text>
             <text x="245" y="110" text-anchor="middle" fill="#e8e8f8" font-size="11" font-weight="600">Senior FDE</text>
-
-            <!-- Column 3: Staff FDE -->
             <circle cx="405" cy="80" r="12" fill="#0A0A2A" stroke="#00D4AA" stroke-width="2"/>
             <text x="405" y="84" text-anchor="middle" fill="#00D4AA" font-size="9" font-weight="600">Staff</text>
             <text x="405" y="110" text-anchor="middle" fill="#00D4AA" font-size="11" font-weight="600">Staff FDE</text>
-
-            <!-- Column 4: 4 career branches -->
             <rect x="585" y="18" rx="6" width="100" height="24" fill="#0A0A2A" stroke="#00D4AA" stroke-width="1.5"/>
             <text x="635" y="35" text-anchor="middle" fill="#00D4AA" font-size="10" font-weight="600">产品工程</text>
-
             <rect x="585" y="58" rx="6" width="100" height="24" fill="#0A0A2A" stroke="#00D4AA" stroke-width="1.5"/>
-            <text x="635" y="75" text-anchor="middle" fill="#00D4AA" font-size="10" font-weight="600">客户工程领导</text>
-
+            <text x="635" y="75" text-anchor="middle" fill="#00D4AA" font-size="10" font-weight="600">客户工程</text>
             <rect x="585" y="98" rx="6" width="100" height="24" fill="#0A0A2A" stroke="#00D4AA" stroke-width="1.5"/>
-            <text x="635" y="115" text-anchor="middle" fill="#00D4AA" font-size="10" font-weight="600">解决方案架构</text>
-
+            <text x="635" y="115" text-anchor="middle" fill="#00D4AA" font-size="10" font-weight="600">解决方案</text>
             <rect x="585" y="138" rx="6" width="100" height="24" fill="#0A0A2A" stroke="#00D4AA" stroke-width="1.5"/>
             <text x="635" y="155" text-anchor="middle" fill="#00D4AA" font-size="10" font-weight="600">创业</text>
         </svg>
