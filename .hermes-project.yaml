@@ -1,0 +1,16 @@
+project: cloudwise-archived
+website: https://cloudwise.archived.jaden.tech
+profiles:
+- name: dev
+- name: ops
+- name: review
+sessions:
+- role: ops
+  profile: ops
+  title: cloudwise-archived-ops
+- role: review
+  profile: review
+  title: cloudwise-archived-review
+- role: dev
+  profile: dev
+  title: cloudwise-archived-dev
